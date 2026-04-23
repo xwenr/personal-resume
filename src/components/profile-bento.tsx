@@ -3,43 +3,10 @@ import { GraduationCap, Sparkles, Trophy } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
 import { SectionHeading } from '@/components/ui/section-heading'
+import { useTranslation } from '@/i18n/language-context'
 import { cn } from '@/lib/utils'
 
 const EASE = [0.22, 1, 0.36, 1] as const
-
-const SKILLS = [
-  'Product Management',
-  'AIGC Workflow',
-  'Data Analysis · R / LASSO',
-  'Prompt Engineering',
-  'User Research',
-  'Figma & Design Systems',
-  'A/B Experimentation',
-  'SQL · Python',
-]
-
-const AWARDS = [
-  {
-    year: '2024',
-    title: 'National Statistical Modelling Contest',
-    rank: 'First Prize',
-  },
-  {
-    year: '2023',
-    title: 'MathorCup Big Data Competition',
-    rank: 'Second Prize',
-  },
-  {
-    year: '2023',
-    title: 'Interdisciplinary Contest in Modelling',
-    rank: 'Honorable Mention',
-  },
-  {
-    year: '2022',
-    title: 'University Entrepreneurship Challenge',
-    rank: 'Bronze Award',
-  },
-] as const
 
 function AbstractChart() {
   return (
@@ -105,17 +72,23 @@ function BentoCard({ className, children, delay = 0, ...props }: BentoCardProps)
 }
 
 export function ProfileBento() {
+  const { t } = useTranslation()
+  const profile = t.profile
+
   return (
     <section id="profile" className="relative px-6 py-28 md:py-36">
       <div className="mx-auto max-w-7xl">
         <SectionHeading
-          eyebrow="01 — Profile"
+          eyebrow={profile.eyebrow}
           title={
             <>
-              A data-minded <em className="font-display italic text-muted-foreground">product thinker.</em>
+              {profile.titlePrefix}{' '}
+              <em className="font-display italic text-muted-foreground">
+                {profile.titleEmphasis}
+              </em>
             </>
           }
-          description="Building at the intersection of statistics, AIGC and thoughtful user experience — curious about the details, rigorous about the decisions."
+          description={profile.description}
           className="mb-14"
         />
 
@@ -124,13 +97,15 @@ export function ProfileBento() {
           <BentoCard className="md:col-span-2 md:row-span-1" delay={0.05}>
             <div className="flex items-center gap-3 text-muted-foreground">
               <GraduationCap className="h-4 w-4" />
-              <span className="text-xs uppercase tracking-[0.25em]">Education</span>
+              <span className="text-xs uppercase tracking-[0.25em]">
+                {profile.education.eyebrow}
+              </span>
             </div>
-            <h3 className="mt-6 font-display text-3xl leading-tight tracking-tighter text-foreground md:text-4xl">
-              Master in Applied Statistics
+            <h3 className="mt-6 font-display text-2xl leading-tight tracking-tight text-foreground md:text-3xl">
+              {profile.education.title}
             </h3>
-            <p className="mt-1 text-sm text-muted-foreground">
-              B.S. Financial Mathematics · Honors Thesis on LASSO regression
+            <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+              {profile.education.subtitle}
             </p>
             <AbstractChart />
           </BentoCard>
@@ -142,20 +117,22 @@ export function ProfileBento() {
           >
             <div className="flex items-center gap-3 text-muted-foreground">
               <Sparkles className="h-4 w-4" />
-              <span className="text-xs uppercase tracking-[0.25em]">Core Skills</span>
+              <span className="text-xs uppercase tracking-[0.25em]">
+                {profile.skills.eyebrow}
+              </span>
             </div>
             <h3 className="mt-6 font-display text-3xl leading-tight tracking-tighter text-foreground md:text-4xl">
-              A polyglot toolkit for modern product work.
+              {profile.skills.title}
             </h3>
             <div className="mt-8 flex flex-wrap gap-2">
-              {SKILLS.map((skill) => (
+              {profile.skills.items.map((skill) => (
                 <Badge key={skill} variant="default" className="text-sm">
                   {skill}
                 </Badge>
               ))}
             </div>
             <p className="mt-auto pt-10 text-xs uppercase tracking-[0.25em] text-muted-foreground">
-              · Applied daily in shipping product
+              {profile.skills.footnote}
             </p>
           </BentoCard>
 
@@ -164,17 +141,19 @@ export function ProfileBento() {
             <div className="flex items-center gap-3 text-muted-foreground">
               <Trophy className="h-4 w-4" />
               <span className="text-xs uppercase tracking-[0.25em]">
-                Competitions & Awards
+                {profile.awards.eyebrow}
               </span>
             </div>
             <ul className="mt-6 divide-y divide-foreground/10">
-              {AWARDS.map((award) => (
+              {profile.awards.items.map((award) => (
                 <li
-                  key={award.title}
+                  key={`${award.title}-${award.year}`}
                   className="flex items-baseline justify-between gap-4 py-3 first:pt-0 last:pb-0"
                 >
-                  <div className="flex flex-col">
-                    <span className="text-sm text-foreground">{award.title}</span>
+                  <div className="flex min-w-0 flex-col">
+                    <span className="truncate text-sm text-foreground">
+                      {award.title}
+                    </span>
                     <span className="text-xs text-muted-foreground">
                       {award.rank}
                     </span>
@@ -193,19 +172,27 @@ export function ProfileBento() {
               <div>
                 <div className="flex items-center gap-3 text-muted-foreground">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-600/80 animate-pulse" />
-                  <span className="text-xs uppercase tracking-[0.25em]">Currently</span>
+                  <span className="text-xs uppercase tracking-[0.25em]">
+                    {profile.current.eyebrow}
+                  </span>
                 </div>
                 <p className="mt-4 max-w-3xl font-display text-2xl leading-snug tracking-tight text-foreground md:text-3xl">
-                  Exploring the{' '}
-                  <em className="not-italic text-muted-foreground">co-creative</em> space
-                  between human intent and generative models — designing
-                  prompt-first interfaces that feel quietly intelligent.
+                  {profile.current.content}
                 </p>
               </div>
               <div className="grid grid-cols-3 gap-8 text-left md:text-right">
-                <Stat label="Projects" value="24" />
-                <Stat label="Launches" value="11" />
-                <Stat label="Citations" value="340+" />
+                <Stat
+                  label={profile.current.stats.modelsLabel}
+                  value={profile.current.stats.modelsValue}
+                />
+                <Stat
+                  label={profile.current.stats.internshipsLabel}
+                  value={profile.current.stats.internshipsValue}
+                />
+                <Stat
+                  label={profile.current.stats.sqlLabel}
+                  value={profile.current.stats.sqlValue}
+                />
               </div>
             </div>
           </BentoCard>
