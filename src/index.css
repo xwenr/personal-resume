@@ -1,0 +1,186 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=Noto+Serif+SC:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Latin glyphs come from Instrument Serif / Geist; Chinese glyphs fall
+       back to Noto Serif SC / Noto Sans SC so the mixed layout stays
+       visually coherent in both zh-CN and en. */
+    --font-display: 'Instrument Serif', 'Noto Serif SC', 'Cormorant Garamond',
+      'Source Han Serif SC', 'PingFang SC', 'Songti SC', serif;
+    --font-body: 'Geist', 'Inter', 'Noto Sans SC', 'PingFang SC',
+      'Microsoft YaHei', system-ui, sans-serif;
+
+    /* Warm minimalist / earthy palette (HSL values matching the hex spec)
+       --background  #F5F2E9  warm paper beige
+       --foreground  #3A2E2A  deep espresso
+       --muted-fg    #8C7D73  soft taupe
+       --accent      #D4C9BC  darker beige for borders / hover
+    */
+    --background: 45 38% 94%;
+    --foreground: 15 16% 20%;
+
+    --card: 45 38% 96%;
+    --card-foreground: 15 16% 20%;
+
+    --popover: 45 38% 96%;
+    --popover-foreground: 15 16% 20%;
+
+    --primary: 15 16% 20%;
+    --primary-foreground: 45 38% 94%;
+
+    --secondary: 33 22% 78%;
+    --secondary-foreground: 15 16% 20%;
+
+    --muted: 45 25% 90%;
+    --muted-foreground: 24 10% 50%;
+
+    --accent: 33 22% 78%;
+    --accent-foreground: 15 16% 20%;
+
+    --destructive: 0 62% 48%;
+    --destructive-foreground: 45 38% 94%;
+
+    --border: 33 22% 78%;
+    --input: 33 22% 78%;
+    --ring: 15 16% 20%;
+
+    --radius: 1rem;
+
+    color-scheme: light;
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  html,
+  body,
+  #root {
+    @apply h-full;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.01em;
+  }
+
+  /* ---- Global scrollbar removal: seamless sliding experience ---- */
+  html,
+  body,
+  * {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar,
+  *::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
+
+  .font-display {
+    font-family: var(--font-display);
+    font-feature-settings: 'ss01', 'ss02';
+  }
+}
+
+/* ----------------------------------------------------------------
+   Material — warm translucent frosted glass over beige paper
+   ---------------------------------------------------------------- */
+.liquid-glass {
+  background: rgba(245, 242, 233, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(58, 46, 42, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  border-radius: 1rem;
+}
+
+/* Slightly more presence for dense UI mockups on flat paper */
+.liquid-glass-strong {
+  background: rgba(245, 242, 233, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(58, 46, 42, 0.1);
+  box-shadow: 0 6px 30px rgba(58, 46, 42, 0.04);
+  border-radius: 1rem;
+}
+
+/* Hover lift used by buttons and cards */
+.glass-hover {
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.glass-hover:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 10px 30px rgba(58, 46, 42, 0.08);
+  background-color: rgba(245, 242, 233, 0.65);
+  border-color: rgba(58, 46, 42, 0.14);
+}
+
+/* Marquee fallback for horizontal gallery */
+@keyframes marquee-x {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee-x 40s linear infinite;
+}
+
+/* Fine typographic helpers */
+.text-balance { text-wrap: balance; }
+.text-pretty  { text-wrap: pretty; }
+
+/* Gradient text used on huge display headings — now dark espresso */
+.text-gradient-soft {
+  background: linear-gradient(
+    180deg,
+    hsl(var(--foreground)) 0%,
+    hsl(var(--foreground) / 0.55) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ----------------------------------------------------------------
+   Text shadows — for white text floating over a dark video (Hero only)
+   ---------------------------------------------------------------- */
+.text-shadow-hero {
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.text-shadow-soft {
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* ----------------------------------------------------------------
+   Fade-rise entrance (retained as CSS utility for non-motion nodes)
+   ---------------------------------------------------------------- */
+@keyframes fade-rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-rise          { animation: fade-rise 0.8s ease-out both; }
+.animate-fade-rise-delay    { animation: fade-rise 0.8s ease-out 0.2s both; }
+.animate-fade-rise-delay-2  { animation: fade-rise 0.8s ease-out 0.4s both; }
