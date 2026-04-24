@@ -296,7 +296,7 @@ function Polaroid({
             className="absolute inset-0 h-full w-full object-cover object-center"
           />
         ) : (
-          <PolaroidMock index={index} />
+          <PolaroidMock index={index} variant={item.mockVariant} />
         )}
 
         {github ? (
@@ -421,8 +421,17 @@ function GithubMark(props: SVGProps<SVGSVGElement>) {
   )
 }
 
-function PolaroidMock({ index }: { index: number }) {
-  const style = index % 3
+function PolaroidMock({
+  index,
+  variant,
+}: {
+  index: number
+  variant?: 0 | 1 | 2
+}) {
+  // `variant` takes precedence when set; otherwise fall back to the
+  // position-based rotation. Using `??` (not `||`) so `variant === 0`
+  // isn't mistakenly treated as "unset".
+  const style = variant ?? index % 3
   return (
     <div className="absolute inset-0">
       <div className="absolute inset-0 opacity-70">

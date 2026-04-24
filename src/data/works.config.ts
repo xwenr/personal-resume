@@ -43,6 +43,16 @@ export type WorkConfig = {
    */
   cover?: string
   /**
+   * Explicit override for the abstract PolaroidMock variant when no cover
+   * is supplied. Useful for "Coming Soon"-style cards that should mirror
+   * a specific existing card's mock.
+   *   0 → editor-card mock (dots + text + tile trio)
+   *   1 → wave lines
+   *   2 → weekly bar chart
+   * Omit to fall back to `index % 3`, which is fine for most cards.
+   */
+  mockVariant?: 0 | 1 | 2
+  /**
    * Optional link override — click-through target for the card CTA.
    * Falls back to the GitHub URL if not set.
    */
@@ -62,6 +72,7 @@ export const WORKS_CONFIG: WorkConfig[] = [
     },
     meta: { zh: '', en: '' },
     accent: 'from-amber-300/40 to-orange-200/20',
+    cover: '/works/resumeflow.png',
   },
   {
     slug: 'travel-plan',
@@ -75,6 +86,7 @@ export const WORKS_CONFIG: WorkConfig[] = [
     },
     meta: { zh: '', en: '' },
     accent: 'from-lime-300/35 to-amber-200/20',
+    cover: '/works/travel-plan.png',
   },
   {
     slug: 'promptory',
@@ -88,6 +100,7 @@ export const WORKS_CONFIG: WorkConfig[] = [
     },
     meta: { zh: '', en: '' },
     accent: 'from-stone-300/50 to-neutral-200/20',
+    cover: '/works/promptory.png',
   },
   {
     slug: 'fruit-tea-liquor',
@@ -117,6 +130,7 @@ export const WORKS_CONFIG: WorkConfig[] = [
       en: 'Side-projects and open-source work taking shape — AIGC interactions, data viz and product prototyping experiments.',
     },
     meta: { zh: '2026 · 持续更新', en: '2026 · Ongoing' },
-    accent: 'from-stone-400/35 to-stone-200/20',
+    accent: 'from-rose-300/40 to-amber-200/20',
+    mockVariant: 0,
   },
 ]

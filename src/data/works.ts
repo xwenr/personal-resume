@@ -32,6 +32,7 @@ export type ResolvedWork = {
   meta: string
   accent: string
   cover?: string
+  mockVariant?: 0 | 1 | 2
   ctaUrl?: string
   github?: GithubMeta
 }
@@ -116,6 +117,7 @@ export function resolveWorks(lang: Locale): ResolvedWork[] {
       meta: pickMeta(w, lang, github),
       accent: w.accent,
       cover: w.cover,
+      mockVariant: w.mockVariant,
       ctaUrl: w.externalUrl ?? github?.url,
       github,
     }
