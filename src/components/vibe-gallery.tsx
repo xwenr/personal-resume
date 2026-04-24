@@ -1,105 +1,193 @@
-import { useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type SVGProps } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
+import { ExternalLink, Star } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
 import { SectionHeading } from '@/components/ui/section-heading'
+import { resolveWorks, type ResolvedWork } from '@/data/works'
+import { formatStars, languageColour, relativeTime } from '@/lib/github'
+import { useTranslation } from '@/i18n/language-context'
+import type { Locale } from '@/i18n/translations'
 import { cn } from '@/lib/utils'
 
-type VibeItem = {
-  title: string
-  subtitle: string
-  tag: string
-  accent: string
+// Tailwind's `md` breakpoint — below this we fall back to native horizontal
+// snap scrolling, which feels more natural on touch devices than hijacked
+// sticky scrolling.
+const DESKTOP_QUERY = '(min-width: 768px)'
+
+/**
+ * Works gallery.
+ *
+ * Desktop: classic "sticky + translateX" horizontal scroll driven by
+ * Framer Motion's `useScroll` / `useTransform`. The outer container is tall;
+ * the inner sticky wrapper freezes the viewport while the user scrolls
+ * vertically, and the track slides horizontally via a hardware-accelerated
+ * `x` transform (no per-frame React re-renders).
+ *
+ * Mobile: plain native `overflow-x-auto` with CSS scroll snapping.
+ */
+export function VibeGallery() {
+  const [isDesktop, setIsDesktop] = useState(true)
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return
+    const mql = window.matchMedia(DESKTOP_QUERY)
+    const sync = () => setIsDesktop(mql.matches)
+    sync()
+    mql.addEventListener('change', sync)
+    return () => mql.removeEventListener('change', sync)
+  }, [])
+
+  return isDesktop ? <DesktopWorks /> : <MobileWorks />
 }
 
-const VIBE_ITEMS: VibeItem[] = [
-  {
-    title: 'Digital Travel Footprint',
-    subtitle: 'A generative memory atlas stitched from geo-tagged moments.',
-    tag: 'Vibe Coding',
-    accent: 'from-amber-300/40 to-orange-200/20',
-  },
-  {
-    title: 'Latent Reading Room',
-    subtitle: 'An AI-curated library UI that learns your reading vibe.',
-    tag: 'Prototype',
-    accent: 'from-stone-300/50 to-neutral-200/20',
-  },
-  {
-    title: 'Prompt Garden',
-    subtitle: 'A card-based playground for iterative prompt design.',
-    tag: 'Vibe Coding',
-    accent: 'from-lime-300/35 to-amber-200/20',
-  },
-  {
-    title: 'Micro Essays',
-    subtitle: 'Tiny literary interfaces for tiny daily observations.',
-    tag: 'Side Project',
-    accent: 'from-rose-300/40 to-amber-200/20',
-  },
-  {
-    title: 'Soft Metrics',
-    subtitle: 'Humane dashboards that emphasise curiosity over alarm.',
-    tag: 'Concept',
-    accent: 'from-orange-200/45 to-yellow-100/20',
-  },
-  {
-    title: 'Quiet Rituals',
-    subtitle: 'A minimalist companion for focus, rest and reflection.',
-    tag: 'Vibe Coding',
-    accent: 'from-stone-400/35 to-stone-200/20',
-  },
-]
+function DesktopWorks() {
+  const { t, lang } = useTranslation()
+  const works = t.works
+  const items = resolveWorks(lang)
 
-export function VibeGallery() {
+  // `targetRef` → outer tall <section>, consumed by `useScroll` as the
+  // progress target. `trackRef` → the horizontal <motion.div> we measure
+  // once (on mount / resize / font-load) to derive an exact translate end.
+  const targetRef = useRef<HTMLElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
 
-  // Scroll progress of the outer section controls horizontal translation.
+  // Geometry derived from the real track width. Computed only on
+  // mount/resize/font-load — NEVER during scroll — so the scroll path
+  // stays on the GPU transform with zero per-frame React re-renders.
+  //
+  //   • `translateEnd`: final CSS translate percentage, e.g. "-47.50%".
+  //     Keeps the canonical `["0%", "-X%"]` shape while adapting to any
+  //     viewport width. Hard-coding a single "-65%" or "-75%" looks fine
+  //     on one monitor and breaks on another (we verified this on 1280 vs
+  //     1920 viewports). `-70%` is just a fallback for the single pre-
+  //     measurement frame; `useLayoutEffect` overrides it synchronously
+  //     before the browser paints.
+  //   • `sectionHeight`: outer <section> height = 1 viewport (the sticky
+  //     dwell) + exactly the horizontal travel in pixels. Progress reaches
+  //     1 precisely as the last card's RIGHT edge meets the viewport's
+  //     RIGHT edge — and at that same instant the sticky releases and the
+  //     page continues to Contact. No scroll-trap dead zone.
+  const [translateEnd, setTranslateEnd] = useState<string>('-70%')
+  const [sectionHeight, setSectionHeight] = useState<string>('250vh')
+
+  useLayoutEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+
+    const measure = () => {
+      const styles = window.getComputedStyle(track)
+      // Right padding on the motion track (`px-8 md:px-20`) is *not* card
+      // content — if we translate past it, the user sees a dead zone at
+      // the end of the scroll where the cards look done but the page is
+      // still pinned. Subtract it so translate stops exactly on the last
+      // card's right edge.
+      const rightPadding = Number.parseFloat(styles.paddingRight) || 0
+      const trackWidth = track.scrollWidth
+      const viewportWidth = window.innerWidth
+      const viewportHeight = window.innerHeight
+
+      const contentEnd = trackWidth - rightPadding
+      const distancePx = Math.max(0, contentEnd - viewportWidth)
+
+      if (trackWidth > 0) {
+        const pct = (distancePx / trackWidth) * 100
+        setTranslateEnd(`-${pct.toFixed(2)}%`)
+      }
+      setSectionHeight(`${viewportHeight + distancePx}px`)
+    }
+
+    measure()
+
+    const resizeObserver = new ResizeObserver(measure)
+    resizeObserver.observe(track)
+    window.addEventListener('resize', measure)
+
+    if (typeof document !== 'undefined' && 'fonts' in document) {
+      document.fonts.ready.then(measure).catch(() => {})
+    }
+
+    return () => {
+      resizeObserver.disconnect()
+      window.removeEventListener('resize', measure)
+    }
+  }, [items.length, lang])
+
   const { scrollYProgress } = useScroll({
-    target: trackRef,
+    target: targetRef,
+    // Exact 0→1 mapping across the outer <section>: progress is 0 when
+    // the section top hits the viewport top; 1 when the section bottom
+    // hits the viewport bottom. Since sticky releases at that exact
+    // moment, the page naturally flows into the next sibling (Contact).
     offset: ['start start', 'end end'],
   })
-
-  // The track is ~2× viewport wide; we translate -60% across its progress.
-  const x = useTransform(scrollYProgress, [0, 1], ['5%', '-60%'])
+  const x = useTransform(scrollYProgress, [0, 1], ['0%', translateEnd])
 
   return (
+    // 1. Scroll Track — tall outer <section>. Parent <main> uses
+    //    `overflow-x-clip` (NOT `hidden`) so the sticky anchor is the
+    //    real viewport, not <main>.
     <section
-      id="vibe"
-      ref={trackRef}
-      className="relative w-full overflow-x-hidden"
-      style={{ height: '220vh' }}
+      id="works"
+      ref={targetRef}
+      className="relative w-full bg-transparent"
+      style={{ height: sectionHeight }}
     >
-      <div className="sticky top-0 flex h-screen flex-col justify-center">
-        <div className="mx-auto mb-12 w-full max-w-7xl px-6">
+      {/* 2. Sticky Viewport — `flex-col` so the header stacks cleanly
+             ABOVE the card track (previous `items-center` + absolute
+             header caused them to overlap on tall cards). */}
+      <div className="sticky top-0 flex h-screen w-full flex-col justify-center overflow-hidden py-10 lg:py-16">
+        {/* 3. Header — static, reserves its own vertical space. */}
+        <div className="mx-auto mb-10 w-full max-w-7xl shrink-0 px-8 md:px-20">
           <SectionHeading
-            eyebrow="03 — Vibe Coding"
+            eyebrow={works.eyebrow}
             title={
               <>
-                Side-projects built for{' '}
+                {works.titlePrefix}{' '}
                 <em className="font-display italic text-muted-foreground">
-                  the feel of it.
+                  {works.titleEmphasis}
                 </em>
               </>
             }
-            description="Quick prototypes, weekend experiments and unplanned detours — the kind of work that happens when curiosity gets a free afternoon."
+            description={works.description}
             className="max-w-3xl"
           />
         </div>
 
-        <motion.div
-          style={{ x }}
-          className="flex items-center gap-6 px-6 will-change-transform"
-        >
-          {VIBE_ITEMS.map((item, idx) => (
-            <Polaroid key={item.title} item={item} index={idx} />
-          ))}
-        </motion.div>
+        {/* 4. Motion Track Wrapper — takes the remaining vertical space
+               (flex-1) and vertically centres the horizontal motion row. */}
+        <div className="flex flex-1 items-center">
+          <motion.div
+            ref={trackRef}
+            style={{ x }}
+            // `shrink-0` is essential: without it, flex will compress
+            // `w-max` down to the wrapper width (= viewport), which
+            // desynchronises `scrollWidth` (true content width) from
+            // `offsetWidth` (what `translateX(%)` is measured against),
+            // breaking our percentage calculation.
+            className="flex w-max shrink-0 items-stretch gap-8 px-8 will-change-transform md:px-20"
+          >
+            {items.map((item, idx) => (
+              <Polaroid
+                key={item.slug}
+                item={item}
+                index={idx}
+                lang={lang}
+                viewRepoLabel={works.viewRepo}
+                viewLiveLabel={works.viewLive}
+                updatedPrefix={works.updatedPrefix}
+              />
+            ))}
+          </motion.div>
+        </div>
 
-        <div className="mx-auto mt-10 flex w-full max-w-7xl items-center justify-between px-6 text-xs uppercase tracking-[0.3em] text-muted-foreground">
-          <span>Scroll to reveal →</span>
+        {/* 5. Footer — scroll hint + count, static at the bottom of the
+               sticky frame (shrink-0 so it isn't squeezed). */}
+        <div className="mx-auto mt-8 flex w-full max-w-7xl shrink-0 items-center justify-between px-8 text-xs uppercase tracking-[0.3em] text-muted-foreground md:px-20">
+          <span>{works.scrollHint}</span>
           <span>
-            {String(VIBE_ITEMS.length).padStart(2, '0')} prototypes
+            {String(items.length).padStart(2, '0')}{' '}
+            {works.worksCountSuffix}
           </span>
         </div>
       </div>
@@ -107,8 +195,80 @@ export function VibeGallery() {
   )
 }
 
-function Polaroid({ item, index }: { item: VibeItem; index: number }) {
+function MobileWorks() {
+  const { t, lang } = useTranslation()
+  const works = t.works
+  const items = resolveWorks(lang)
+
+  return (
+    <section id="works" className="relative w-full py-20">
+      <div className="mx-auto mb-8 w-full max-w-7xl px-6">
+        <SectionHeading
+          eyebrow={works.eyebrow}
+          title={
+            <>
+              {works.titlePrefix}{' '}
+              <em className="font-display italic text-muted-foreground">
+                {works.titleEmphasis}
+              </em>
+            </>
+          }
+          description={works.description}
+          className="max-w-3xl"
+        />
+      </div>
+
+      <div
+        className={cn(
+          'flex snap-x snap-mandatory gap-6 overflow-x-auto overflow-y-hidden px-6 pb-6',
+          '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
+          'scroll-px-6',
+        )}
+      >
+        {items.map((item, idx) => (
+          <Polaroid
+            key={item.slug}
+            item={item}
+            index={idx}
+            lang={lang}
+            viewRepoLabel={works.viewRepo}
+            viewLiveLabel={works.viewLive}
+            updatedPrefix={works.updatedPrefix}
+          />
+        ))}
+      </div>
+
+      <div className="mx-auto mt-6 flex w-full max-w-7xl items-center justify-between px-6 text-xs uppercase tracking-[0.3em] text-muted-foreground">
+        <span>{works.scrollHint}</span>
+        <span>
+          {String(items.length).padStart(2, '0')}{' '}
+          {works.worksCountSuffix}
+        </span>
+      </div>
+    </section>
+  )
+}
+
+function Polaroid({
+  item,
+  index,
+  lang,
+  viewRepoLabel,
+  viewLiveLabel,
+  updatedPrefix,
+}: {
+  item: ResolvedWork
+  index: number
+  lang: Locale
+  viewRepoLabel: string
+  viewLiveLabel: string
+  updatedPrefix: string
+}) {
   const tilt = index % 2 === 0 ? -1.5 : 1.5
+  const { github, ctaUrl } = item
+  const liveUrl = github?.homepage || undefined
+  const hasFootRow = Boolean(github) || Boolean(ctaUrl) || Boolean(liveUrl)
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 40, rotate: tilt * 0.4 }}
@@ -116,37 +276,148 @@ function Polaroid({ item, index }: { item: VibeItem; index: number }) {
       viewport={{ once: true, margin: '-80px' }}
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -6, rotate: 0, scale: 1.02 }}
-      className="liquid-glass group relative flex h-[64vh] min-h-[480px] w-[320px] shrink-0 flex-col overflow-hidden p-5 sm:w-[380px] md:w-[440px]"
+      className="liquid-glass group relative flex w-[320px] shrink-0 snap-start flex-col overflow-hidden p-5 sm:w-[380px] md:w-[440px]"
     >
+      {/* Hero area is locked to a 3:4 portrait so poster screenshots and
+          the abstract PolaroidMock share the same aspect — cards line up
+          cleanly regardless of whether a cover image is supplied. */}
       <div
-        aria-hidden
         className={cn(
-          'relative flex-1 overflow-hidden rounded-[0.75rem] bg-gradient-to-br',
+          'relative aspect-[3/4] overflow-hidden rounded-[0.75rem] bg-gradient-to-br',
           item.accent,
         )}
       >
-        <PolaroidMock index={index} />
+        {item.cover ? (
+          <img
+            src={item.cover}
+            alt={item.title}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover object-center"
+          />
+        ) : (
+          <PolaroidMock index={index} />
+        )}
+
+        {github ? (
+          <a
+            href={github.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${item.title} on GitHub`}
+            title={github.fullName}
+            className="liquid-glass glass-hover absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[10px] font-medium uppercase tracking-[0.15em] text-foreground"
+          >
+            <GithubMark className="h-3 w-3" />
+            <span className="hidden sm:inline">GitHub</span>
+          </a>
+        ) : null}
       </div>
 
       <div className="mt-5 flex items-start justify-between gap-3">
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <div className="mb-2 flex items-center gap-2">
             <Badge variant="outline" className="text-[10px]">
               {item.tag}
             </Badge>
+            {item.meta ? (
+              <span className="truncate text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                {item.meta}
+              </span>
+            ) : null}
           </div>
           <h3 className="truncate font-display text-2xl tracking-tight text-foreground">
             {item.title}
           </h3>
-          <p className="mt-1 text-sm leading-snug text-muted-foreground">
-            {item.subtitle}
-          </p>
+          {item.subtitle ? (
+            <p className="mt-1 line-clamp-3 text-sm leading-snug text-muted-foreground">
+              {item.subtitle}
+            </p>
+          ) : null}
         </div>
         <span className="font-display text-2xl tracking-tight text-foreground/60">
           0{index + 1}
         </span>
       </div>
+
+      {hasFootRow ? (
+        <div className="mt-4 flex items-center justify-between border-t border-foreground/10 pt-3 text-[11px] text-muted-foreground">
+          <div className="flex min-w-0 items-center gap-3">
+            {github?.language ? (
+              <span className="flex items-center gap-1.5">
+                <span
+                  aria-hidden
+                  className="h-2 w-2 rounded-full"
+                  style={{ backgroundColor: languageColour(github.language) }}
+                />
+                <span className="truncate">{github.language}</span>
+              </span>
+            ) : null}
+            {github && github.stars > 0 ? (
+              <span className="flex items-center gap-1">
+                <Star className="h-3 w-3" strokeWidth={1.6} />
+                <span>{formatStars(github.stars)}</span>
+              </span>
+            ) : null}
+            {github?.updatedAt ? (
+              <span className="truncate">
+                {updatedPrefix} {relativeTime(github.updatedAt, lang)}
+              </span>
+            ) : null}
+          </div>
+
+          <div className="ml-3 flex shrink-0 items-center gap-3">
+            {liveUrl ? (
+              <a
+                href={liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group/cta inline-flex items-center gap-1 whitespace-nowrap font-medium text-foreground/85 transition-colors hover:text-foreground"
+              >
+                {viewLiveLabel}
+                <ExternalLink
+                  className="h-3 w-3 transition-transform group-hover/cta:-translate-y-0.5 group-hover/cta:translate-x-0.5"
+                  strokeWidth={1.6}
+                />
+              </a>
+            ) : null}
+            {ctaUrl ? (
+              <a
+                href={ctaUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group/cta inline-flex items-center gap-1 whitespace-nowrap font-medium text-foreground/85 transition-colors hover:text-foreground"
+              >
+                {viewRepoLabel}
+                <ExternalLink
+                  className="h-3 w-3 transition-transform group-hover/cta:-translate-y-0.5 group-hover/cta:translate-x-0.5"
+                  strokeWidth={1.6}
+                />
+              </a>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
     </motion.article>
+  )
+}
+
+function GithubMark(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden fill="currentColor" {...props}>
+      <path
+        fillRule="evenodd"
+        d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
+           0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
+           -.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87
+           2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95
+           0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82
+           .64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82
+           .44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95
+           .29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01
+           0 0 0 16 8c0-4.42-3.58-8-8-8z"
+      />
+    </svg>
   )
 }
 

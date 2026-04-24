@@ -1,5 +1,11 @@
-const VIDEO_SRC =
-  'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4'
+/**
+ * Served from /public as a static asset. Replace the file at
+ * `public/hero-bg.mp4` to swap backgrounds without touching code.
+ *
+ * The query-string is a cache-buster so that browsers fetch the fresh
+ * file whenever the underlying asset is overwritten.
+ */
+const VIDEO_SRC = '/hero-bg.mp4?v=3'
 
 export function BackgroundVideo() {
   return (

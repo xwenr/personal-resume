@@ -7,6 +7,7 @@
 
 export const zh = {
   nav: {
+    brand: 'Xin Yongchun',
     profile: '简介',
     experience: '经历',
     works: '作品',
@@ -19,15 +20,15 @@ export const zh = {
     enShort: 'EN',
     tooltip: '切换语言',
   },
-  hero: {
+    hero: {
     available: '正在寻求 2026 秋招机会',
-    titleWords: ['产品经理', '&', 'AIGC 探索者'] as string[],
+    titleWords: ['产品经理', '&', 'AIGC 探索者'],
     description:
       '游走在应用统计与 AIGC 产品之间 —— 用数据的严谨思考产品决策，用产品的温度设计用户体验。',
     viewPortfolio: '查看作品',
     sayHello: '打个招呼',
-    studioName: '辛咏春 · 个人作品集',
-    est: '重庆 · 2026',
+    studioName: '产品 · 数据 · AIGC',
+    est: '2026',
     scroll: '向下滚动 ↓',
   },
   profile: {
@@ -38,69 +39,135 @@ export const zh = {
       '在应用统计、AIGC 产品与温润的用户体验之间寻找连接 —— 对细节保持好奇，对决策保持严谨。',
     education: {
       eyebrow: '教育背景',
-      title: '应用统计（硕士）· 重庆大学',
-      subtitle:
-        '985 / 双一流 · 数学与统计学院 · 2025.09 – 2027.06 \n金融数学（本科）· 西南财经大学 · GPA 88 · 专业前 25%',
+      coursesLabel: '核心课程',
+      honorsLabel: '荣誉',
+      items: [
+        {
+          period: '2025.09 – 2027.06',
+          location: '重庆',
+          school: '重庆大学',
+          badges: ['985', '双一流'],
+          department: '数学与统计学院',
+          degree: '硕士 · 应用统计',
+          achievements: [],
+          courses: [
+            '高等统计学',
+            '机器学习与数据挖掘',
+            '数据库原理',
+            '深度学习',
+            '时间序列分析',
+            '统计数据分析方法',
+            '统计建模',
+          ],
+          honors: '',
+        },
+        {
+          period: '2021.09 – 2025.06',
+          location: '成都',
+          school: '西南财经大学',
+          badges: ['211', '双一流'],
+          department: '数学学院',
+          degree: '本科 · 金融数学',
+          achievements: ['GPA 88', '专业前 25%'],
+          courses: [
+            '数学分析',
+            '高等代数',
+            '概率论与数理统计',
+            '会计学',
+            '投资学',
+            '货币金融学',
+            '数学建模',
+            '计量经济学',
+            '金融衍生品定价',
+            '数据挖掘',
+          ],
+          honors:
+            '2021 – 2024 年每学期均获学业奖学金，曾获科研创新奖学金、光华贡献奖学金等。',
+        },
+      ],
     },
     skills: {
       eyebrow: '核心技能',
       title: '一套面向现代产品工作的 全栈工具箱。',
       footnote: '· 每日应用于产品落地与研究分析',
-      items: [
-        '产品设计 · PRD / 原型',
-        'AIGC 工作流',
-        'Python · Pandas / NumPy',
-        'Scikit-learn · 机器学习',
-        'SQL · 数据库设计',
-        'Tableau & Power BI',
-        'Excel · 数据透视 / VLOOKUP',
-        'Figma · Axure · 墨刀 · Pixso',
-        '跨部门沟通协调',
-        '英语 CET-6 · 584',
+      categories: [
+        {
+          name: '语言能力',
+          items: [
+            '英语六级（584），具备熟练的英文文献与技术文档阅读能力，能进行日常工作沟通',
+          ],
+        },
+        {
+          name: '产品设计与工具',
+          items: [
+            '熟练使用 Axure / 墨刀 / Figma / Pixso 进行界面设计与协作，熟练应用 AI 进行原型设计，具备原型输出、Vibe Coding 经验',
+            '具备较强的沟通协调能力和执行力，能高效对接跨部门工作，推动功能从设计到上线的落地执行',
+          ],
+        },
+        {
+          name: '数据科学与编程',
+          items: [
+            'Python：精通数据科学栈（Pandas / NumPy / Scikit-learn），掌握机器学习建模，熟悉 Matplotlib、Seaborn 等可视化库',
+            'SQL：熟练编写复杂查询、视图与存储过程，具备数据库设计、优化与高性能查询能力',
+          ],
+        },
+        {
+          name: '数据分析与可视化',
+          items: [
+            '精通 Excel（数据透视表、VLOOKUP 等）；掌握 Tableau 与 Power BI 进行数据看板搭建与可视化呈现',
+          ],
+        },
       ],
     },
     awards: {
       eyebrow: '竞赛与荣誉',
       items: [
         {
-          year: '2024',
+          year: '2024.04',
+          title: '第四届美团商业分析精英大赛',
+          rank: '卓越作品奖 · 全国前 50 强入围复赛',
+          description:
+            '作品《绿色引擎——新能源汽车销量增长的驱动解码与营销创新》：通过网络爬虫获取新能源车型配置、品牌影响力、区域经济与用户反馈等数据，利用多元线性回归、随机森林、LDA 主题建模与 K-means 聚类探究销量驱动因素，并引入大语言模型开发多功能数据分析与方案设计平台。负责组内统筹、报告框架撰写、材料收集与部分模型编写，以及 PPT、网页 UI 展示制作与演示视频录制。',
+          link: '/awards/index.html?id=meituan',
+        },
+        {
+          year: '2023.09',
+          title: '高教社杯全国大学生数学建模竞赛',
+          rank: '四川省二等奖',
+          description:
+            '作品《基于目标优化的蔬菜类商品自动定价与补货决策》：通过回归分析与目标优化求解分段定价与最优补货策略。参与问题分析与建模过程，全程负责论文撰写。',
+          link: '/awards/index.html?id=cumcm',
+        },
+        {
+          year: '2023.05',
+          title: 'CFA Research Challenge · 南方航空公司研报',
+          rank: '',
+          description:
+            '担任组长，负责财务分析部分的撰写与全英文报告整合、美化。围绕南方航空公司及其股票展开研究，涵盖财务分析、公司估值、投资逻辑与风险提醒。',
+          link: '/awards/index.html?id=cfa',
+        },
+        {
+          year: '2023.04',
           title: '全国大学生统计建模大赛',
-          rank: '省级二等奖',
+          rank: '四川省二等奖',
+          description:
+            '论文《机会因素对低收入状态的影响分析》：使用多元 Probit 回归与 LightGBM 测算个体低收入状态概率，构造泰尔指数衡量机会不平等系数，并以基尼系数作对比分析。负责模型构建、实证部分编程，参与论文编写。',
+          link: '/awards/index.html?id=statistics',
         },
         {
-          year: '2023',
-          title: '全国大学生数学建模竞赛',
-          rank: '省级二等奖',
-        },
-        {
-          year: '2022',
-          title: '西南财经大学学业奖学金',
-          rank: '校级',
-        },
-        {
-          year: '2022',
-          title: '西南财经大学科研创新奖学金',
-          rank: '校级',
+          year: '2023.04',
+          title: '正大杯全国大学生市场调查与分析大赛',
+          rank: '进入国奖评选',
+          description:
+            '针对果茶酒行业：综合 PEST、SWOT 分析行业与企业，使用 K-means 聚类与 Logistic 回归建模消费者行为，结合 4P 与 STP 策略给出营销建议。担任组长，负责分工协调、市场现状与营销策划部分撰写，以及报告整理与排版美化。',
+          link: '/awards/index.html?id=zhengda',
         },
       ],
-    },
-    current: {
-      eyebrow: '正在进行',
-      content:
-        '在海马云科技探索 AIGC 模型的产品化路径 —— 统筹 50+ 视频 / 图像 / 语音生成模型的全生命周期，设计让智能感自然流淌的 API 计费与配置界面。',
-      stats: {
-        modelsLabel: '接入模型',
-        modelsValue: '50+',
-        internshipsLabel: '实习经历',
-        internshipsValue: '4',
-        sqlLabel: 'SQL 脚本',
-        sqlValue: '400+',
-      },
     },
   },
   experience: {
     eyebrow: '02 — 实习经历',
-    titlePrefix: '四段实习，',
+    titlePrefix: '五段实习，',
     titleEmphasis: '一条清晰轨迹',
     titleSuffix: '。',
     description:
@@ -108,16 +175,17 @@ export const zh = {
     items: [
       {
         id: 'haima-cloud',
-        company: '安徽海马云科技股份有限公司',
+        company: '安徽海马云科技股份有限公司重庆分公司',
         role: 'AIGC 产品实习生',
-        period: '2026.02 – 至今',
+        period: '2026.02 – 2026.05',
         location: '重庆',
         narrative:
-          '统筹 50+ 个 AIGC 模型 API（视频 / 图像 / 语音生成）的全生命周期运营，独立完成 API 计费管理系统的 PRD 设计，覆盖 227 个定价规则与双币种自动化。',
+          '作为 RunningHub 平台 API 产品线实习生，负责 AIGC 模型能力的商业化接入与计费体系构建。通过对 100+ 个跨模态模型（视频 / 图像 / 音频）的接入参数配置与全生命周期运营，独立设计并落地了包含 250+ 个定价规则的双币种自动化计费系统，支持平台 API 业务的商业化闭环。',
         highlights: [
-          '平均模型上线周期控制在 1 周内，保障前端可用性 100%',
-          '搭建 WaveSpeed、MiniMax 等厂商竞品监测体系',
-          '独立输出计费系统 PRD：数据模型、接口规范、批量导入导出',
+          '功能模块设计：独立负责 API 专区公告系统设计及计费前端展示优化，提升信息传达与交易转化效率',
+          '产品改版支持：深度参与快捷创作功能改版与平台计费系统合并需求，协同确保复杂逻辑的平滑迭代',
+          '计费自动化提效：基于 Vibe Coding 搭建定价平台，实现 250+ 规则的双币种自动计算、存储与条件查询',
+          '模型闭环运营：负责 100+ 模型接入排期、参数配置与样例调试，确保前端可用性 100% 且上线周期缩短至 1 周',
         ],
       },
       {
@@ -127,11 +195,12 @@ export const zh = {
         period: '2025.11 – 2026.01',
         location: '重庆',
         narrative:
-          '负责 SaaS 平台律函管理、增值服务等模块的需求调研与原型设计，主导小程序端轻量化产品迁移，推进个人流水风控报告的版本迭代。',
+          '作为数据产品助理，深度参与个人流水风控报告及配套增值服务的需求迭代，并负责产品从 Web 端向小程序端的轻量化迁移与功能同步。通过对流水识别字段扩展、报告可视化模块及律师函接口接入的设计，为 3C 租机及信贷公司提供数据洞察与决策支撑。',
         highlights: [
-          '建立销售 / 运营 / 客户三方需求收集机制与优先级台账',
-          '推进账单接收 → 解析 → 打标签 → 结构化输出的完整链路',
-          '参与租机违约预测、权益用户分群等风控模型的数据设计',
+          '轻量化迁移：主导 SaaS 平台小程序化，实现移动端消息推送与触达',
+          '全链路流程优化：参与迭代流水报告识别逻辑，覆盖解析至结构化输出全链路',
+          '多维需求管理：建立多方需求评估机制，统一管理产品池并排布优先级',
+          '风控模型应用：利用 SQL 提取数据特征，参与租机违约预测模型的设计优化',
         ],
       },
       {
@@ -141,11 +210,11 @@ export const zh = {
         period: '2024.11 – 2025.03',
         location: '北京',
         narrative:
-          '追踪多模态大模型、智能体、具身智能等 AI 方向动态，输出 20+ 篇动态追踪周报（单篇 20,000 余字），并参与构建 AI 信息服务数据库。',
+          '作为市场调研分析实习生，深度参与 AI 前沿技术追踪与产业地图构建。通过对多模态大模型、具身智能等底层演进及全球厂商动态的深度拆解，输出 20+ 份产业情报周报并参与构建 AI 公司数据库，为区域产业规划与战略决策提供高质量的情报支持。',
         highlights: [
-          '输出 20+ 篇深度周报，单篇 20,000 余字',
-          '基于技术报告与测评撰写产业深度解读稿',
-          '参与 AI 公司数据库框架设计与字段录入',
+          '前沿技术追踪：产出 20+ 篇深度周报，覆盖多模态大模型 / 具身智能 / 智能体等领域技术演进',
+          '产业数据治理：参与设计并维护 AI 公司画像数据库，为调研提供结构化支撑',
+          '深度研报撰写：基于技术报告、公司背景、测评数据等资料输出多篇深度解读稿',
         ],
       },
       {
@@ -155,11 +224,26 @@ export const zh = {
         period: '2024.07 – 2024.10',
         location: '上海',
         narrative:
-          '实施客户信用额度监控与风险评估，基于 SQL 提取媒体合规数据构建日常监控报表，参与客户分级与风险预警模型的迭代。',
+          '作为风控策略实习生，深度参与跨境数字营销场景下的客户信用风险与合规管理。通过 SQL 提取 Meta / TikTok 等媒体合规数据构建自动化报表，并监控后付用户余额使用及回款情况，为公司在出海广告投放业务中的资金安全与链路合规提供量化决策支持。',
         highlights: [
-          '识别超额使用风险并协调商务介入，保障资金安全',
-          '搭建媒体合规日常监控报表，推动管控落地',
-          '结合业务变化迭代风控模型逻辑与效能',
+          '媒体合规监控：利用 SQL 分析 Google / TikTok 数据，管控高危违约客户',
+          '余额风险预警：监控后付用户信用额度，通过预警介入确保资金安全',
+          '关联风险排查：分析客户间担保关联，识别潜在风险并完善风控体系',
+          '策略模型迭代：参与定期优化客户分级模型讨论，提升风险识别精准度与有效性',
+        ],
+      },
+      {
+        id: 'jll',
+        company: '仲量联行测量师事务所（JLL）成都分公司',
+        role: '研究部实习生',
+        period: '2024.02 – 2024.06',
+        location: '成都',
+        narrative:
+          '作为研究部实习生，深度参与成都及西南地区工业物流地产的市场监测与研报编写。通过对宏观经济数据及物流地产数据的清洗与建模，产出季度研报与行业研报，提供量化支持与行业洞察。',
+        highlights: [
+          '行业数据建模：更新新能源车企财务数据、内外资制造企业国内建厂数据、电子信息产业链企业数据库，搭建行业规模分析框架',
+          '空间量化分析：运用 ArcGIS 可视化产业链分布，优化物流地产监测',
+          '中英研报编写：协助完成西部物流地产季报与新能源汽车、成都电子信息产业链行业研报撰写，负责报告数据可视化',
         ],
       },
     ],
@@ -169,63 +253,19 @@ export const zh = {
     titlePrefix: '动手做出来的',
     titleEmphasis: '那些作品。',
     description:
-      '实习中独立落地的产品产出，和课余钻研的完整项目 —— 用代码、数据与原型，回应真实场景的问题。',
+      '从 GitHub 同步的独立项目与课余研究 —— 用代码、数据与原型，回应真实场景的问题。',
     scrollHint: '向右滚动查看 →',
     worksCountSuffix: '个项目',
-    items: [
-      {
-        title: '电商平台管理数据库系统',
-        subtitle:
-          '基于 SQL Server 独立完成电商平台数据库设计与实现，覆盖用户、商品、订单、营销、售后等核心模块。',
-        tag: '独立项目',
-        meta: '2025.10 · SQL Server · Streamlit',
-        accent: 'from-amber-300/40 to-orange-200/20',
-      },
-      {
-        title: 'AIGC 模型计费管理系统',
-        subtitle:
-          '独立输出覆盖 227 个定价规则的 PRD（数据模型、接口规范、批量导入导出），支撑平台双币种商业化运营。',
-        tag: '产品设计',
-        meta: '2026 · PRD · 数据模型',
-        accent: 'from-stone-300/50 to-neutral-200/20',
-      },
-      {
-        title: '个人流水风控报告',
-        subtitle:
-          '推动账单接收、解析、识别、字段映射、打标签、结构化输出的完整链路迭代，支撑初创阶段产品快速演进。',
-        tag: '数据产品',
-        meta: '2025–2026 · SQL · Python',
-        accent: 'from-lime-300/35 to-amber-200/20',
-      },
-      {
-        title: 'AI 动态追踪周报',
-        subtitle:
-          '面向多模态大模型、智能体、具身智能等方向，输出 20+ 篇动态追踪周报与深度解读稿，单篇两万余字。',
-        tag: '市场分析',
-        meta: '2024–2025 · 行业研究',
-        accent: 'from-rose-300/40 to-amber-200/20',
-      },
-      {
-        title: '媒体合规监控看板',
-        subtitle:
-          '基于 SQL 提取媒体合规数据，构建日常监控报表，识别高违规客户并推动管控措施落地。',
-        tag: '风控策略',
-        meta: '2024 · SQL · 报表',
-        accent: 'from-orange-200/45 to-yellow-100/20',
-      },
-      {
-        title: '更多作品正在孵化',
-        subtitle:
-          '正在沉淀更多侧项目与开源作品 —— 关于 AIGC 交互、数据可视化与产品原型实验。',
-        tag: 'Coming Soon',
-        meta: '2026 · 持续更新',
-        accent: 'from-stone-400/35 to-stone-200/20',
-      },
-    ],
+    viewRepo: '查看仓库',
+    viewLive: '在线预览',
+    viewDetail: '查看详情',
+    updatedPrefix: '更新于',
+    starsLabel: '星标',
+    noneYet: '仓库资料同步中…',
   },
   contact: {
     eyebrow: '04 — 联系方式',
-    titleWords: ['让我们', '一起', '构建吧。'] as string[],
+    titleWords: ['让我们', '一起', '构建吧。'],
     description:
       '正在寻求 2026 秋招产品经理 / 数据产品相关机会；也欢迎关于 AIGC、研究与产品体验的任何交流。',
     downloadResume: '下载简历',
@@ -243,12 +283,13 @@ export const zh = {
       resume: '简历',
     },
   },
-} as const
+}
 
 type Translations = typeof zh
 
 export const en: Translations = {
   nav: {
+    brand: 'Xin Yongchun',
     profile: 'Profile',
     experience: 'Experience',
     works: 'Works',
@@ -268,8 +309,8 @@ export const en: Translations = {
       'Working at the intersection of applied statistics and AIGC products — where the rigour of data meets the warmth of thoughtful product design.',
     viewPortfolio: 'View Portfolio',
     sayHello: 'Say hello',
-    studioName: 'Xin Yongchun · Portfolio',
-    est: 'Chongqing · 2026',
+    studioName: 'Product · Data · AIGC',
+    est: '2026',
     scroll: 'Scroll ↓',
   },
   profile: {
@@ -280,69 +321,137 @@ export const en: Translations = {
       'Building at the intersection of applied statistics, AIGC and thoughtful user experience — curious about the details, rigorous about the decisions.',
     education: {
       eyebrow: 'Education',
-      title: 'M.S. Applied Statistics · Chongqing University',
-      subtitle:
-        '985 / Double First-Class · School of Mathematics & Statistics · 2025.09 – 2027.06 \nB.S. Financial Mathematics · SWUFE · GPA 88 · Top 25%',
+      coursesLabel: 'Core courses',
+      honorsLabel: 'Honours',
+      items: [
+        {
+          period: '2025.09 – 2027.06',
+          location: 'Chongqing',
+          school: 'Chongqing University',
+          badges: ['985', 'Double First-Class'],
+          department: 'School of Mathematics & Statistics',
+          degree: 'M.S. Applied Statistics',
+          achievements: [],
+          courses: [
+            'Advanced Statistics',
+            'Machine Learning & Data Mining',
+            'Database Principles',
+            'Deep Learning',
+            'Time Series Analysis',
+            'Statistical Data Analysis',
+            'Statistical Modelling',
+          ],
+          honors: '',
+        },
+        {
+          period: '2021.09 – 2025.06',
+          location: 'Chengdu',
+          school: 'SWUFE',
+          badges: ['211', 'Double First-Class'],
+          department: 'School of Mathematics',
+          degree: 'B.S. Financial Mathematics',
+          achievements: ['GPA 88', 'Top 25%'],
+          courses: [
+            'Mathematical Analysis',
+            'Advanced Algebra',
+            'Probability & Statistics',
+            'Accounting',
+            'Investments',
+            'Monetary Finance',
+            'Mathematical Modelling',
+            'Econometrics',
+            'Financial Derivatives Pricing',
+            'Data Mining',
+          ],
+          honors:
+            'Awarded the Academic Scholarship every semester from 2021 to 2024; also received the Research & Innovation Scholarship and the Guanghua Contribution Scholarship, among others.',
+        },
+      ],
     },
     skills: {
       eyebrow: 'Core Skills',
       title: 'A polyglot toolkit for modern product work.',
       footnote: '· Applied daily in shipping product & research',
-      items: [
-        'Product Design · PRD / Prototyping',
-        'AIGC Workflow',
-        'Python · Pandas / NumPy',
-        'Scikit-learn · Machine Learning',
-        'SQL · Database Design',
-        'Tableau & Power BI',
-        'Excel · Pivot / VLOOKUP',
-        'Figma · Axure · MockingBot · Pixso',
-        'Cross-functional Collaboration',
-        'English CET-6 · 584',
+      categories: [
+        {
+          name: 'Languages',
+          items: [
+            'CET-6 (584) — fluent in reading English literature & technical documentation; comfortable in day-to-day English communication.',
+          ],
+        },
+        {
+          name: 'Product Design & Tools',
+          items: [
+            'Proficient in Axure / MockingBot / Figma / Pixso for UI design and cross-team collaboration; experienced in AI-assisted prototyping, prototype delivery and Vibe Coding.',
+            'Strong communication and execution skills — able to coordinate across functions and drive features from design to launch.',
+          ],
+        },
+        {
+          name: 'Data Science & Programming',
+          items: [
+            'Python — fluent in the data-science stack (Pandas / NumPy / Scikit-learn); experienced in ML modelling; familiar with Matplotlib & Seaborn for visualisation.',
+            'SQL — skilled in complex queries, views and stored procedures; database design, optimisation and high-performance querying.',
+          ],
+        },
+        {
+          name: 'Data Analytics & Visualisation',
+          items: [
+            'Proficient in Excel (pivot tables, VLOOKUP, etc.); Tableau and Power BI for dashboarding and data storytelling.',
+          ],
+        },
       ],
     },
     awards: {
       eyebrow: 'Competitions & Honours',
       items: [
         {
-          year: '2024',
-          title: 'National Statistical Modelling Contest',
-          rank: 'Provincial Second Prize',
+          year: '2024.04',
+          title: 'Meituan Business Analytics Elite Challenge · 4th Edition',
+          rank: 'Distinguished Work Award · Top 50 Semi-finalist (National)',
+          description:
+            'Project “Green Engine — Decoding NEV Sales Drivers & Marketing Innovation”: scraped NEV configuration, brand influence, regional economy and user-feedback data; applied multiple linear regression, random forest, LDA topic modelling and K-means clustering to identify sales drivers; integrated a large language model to build a multi-purpose data-analysis and strategy-design platform. Led coordination, report outlining, research collection and partial modelling; delivered the PPT, web UI and presentation video.',
+          link: '/awards/index.html?id=meituan',
         },
         {
-          year: '2023',
-          title: 'National Mathematical Modelling Contest',
-          rank: 'Provincial Second Prize',
+          year: '2023.09',
+          title:
+            'National Undergraduate Mathematical Modelling Contest (Higher-Education Press Cup)',
+          rank: 'Provincial Second Prize · Sichuan',
+          description:
+            'Project “Optimisation-Based Automated Pricing & Replenishment for Vegetables”: used regression analysis and goal optimisation to solve tiered pricing and optimal replenishment. Contributed to problem framing and modelling; owned the full paper write-up.',
+          link: '/awards/index.html?id=cumcm',
         },
         {
-          year: '2022',
-          title: 'SWUFE Academic Scholarship',
-          rank: 'University Level',
+          year: '2023.05',
+          title: 'CFA Research Challenge · China Southern Airlines Equity Report',
+          rank: '',
+          description:
+            'Served as team lead. Owned the financial-analysis section and the integration & polish of the full English report. Covered financial analysis, company valuation, investment logic and risk notes for China Southern Airlines and its listed stock.',
+          link: '/awards/index.html?id=cfa',
         },
         {
-          year: '2022',
-          title: 'SWUFE Research & Innovation Scholarship',
-          rank: 'University Level',
+          year: '2023.04',
+          title: 'National Undergraduate Statistical Modelling Contest',
+          rank: 'Provincial Second Prize · Sichuan',
+          description:
+            'Paper “Impact of Opportunity Factors on Low-Income Status”: estimated individual low-income probability via multivariate Probit regression and LightGBM; constructed a Theil index to quantify opportunity inequality and benchmarked against the Gini coefficient. Owned model construction and empirical programming; contributed to the paper write-up.',
+          link: '/awards/index.html?id=statistics',
+        },
+        {
+          year: '2023.04',
+          title:
+            'Zhengda Cup · National Market Research & Analytics Contest',
+          rank: 'Shortlisted for National Award',
+          description:
+            'Focused on the fruit-wine industry: combined PEST and SWOT for industry & company analysis; applied K-means clustering and logistic regression to consumer behaviour; delivered marketing recommendations via 4P and STP frameworks. Served as team lead — owned task allocation, market-landscape and marketing-strategy sections, and the final report polish.',
+          link: '/awards/index.html?id=zhengda',
         },
       ],
-    },
-    current: {
-      eyebrow: 'Currently',
-      content:
-        'Exploring product paths for AIGC models at Haima Cloud — coordinating 50+ video / image / voice generation model APIs, and designing billing & configuration surfaces that feel quietly intelligent.',
-      stats: {
-        modelsLabel: 'AIGC Models',
-        modelsValue: '50+',
-        internshipsLabel: 'Internships',
-        internshipsValue: '4',
-        sqlLabel: 'SQL Scripts',
-        sqlValue: '400+',
-      },
     },
   },
   experience: {
     eyebrow: '02 — Experience',
-    titlePrefix: 'Four internships,',
+    titlePrefix: 'Five internships,',
     titleEmphasis: 'one clear trajectory',
     titleSuffix: '.',
     description:
@@ -350,16 +459,17 @@ export const en: Translations = {
     items: [
       {
         id: 'haima-cloud',
-        company: 'Haima Cloud Technology',
+        company: 'Haima Cloud Technology (Chongqing)',
         role: 'AIGC Product Intern',
-        period: '2026.02 – Now',
+        period: '2026.02 – 2026.05',
         location: 'Chongqing',
         narrative:
-          'Orchestrate the full lifecycle of 50+ AIGC model APIs (video / image / voice generation) and independently deliver the billing-management PRD covering 227 pricing rules with dual-currency automation.',
+          'Product intern on the RunningHub API product line, owning the commercialisation and billing architecture for AIGC model capabilities. Onboarded 100+ cross-modal models (video / image / audio) end-to-end and designed a dual-currency automated billing system covering 250+ pricing rules — powering the platform’s API monetisation loop.',
         highlights: [
-          'Avg. new-model onboarding cycle kept within 1 week, 100% front-end availability',
-          'Built a competitor-watch system tracking WaveSpeed, MiniMax and more',
-          'Delivered end-to-end PRD: data model, API spec, batch import / export',
+          'Module Design: Independently led the API-zone announcement system and billing front-end polish, lifting clarity and conversion',
+          'Product-Revamp Support: Deeply involved in the quick-creation revamp and billing-system merger, keeping complex logic smooth through iteration',
+          'Billing Automation: Built a pricing platform with Vibe Coding to auto-compute, store and query 250+ rules across dual currencies',
+          'Model Ops Loop: Managed onboarding, parameter configuration and sample debugging for 100+ models — 100% front-end availability, cycle cut to 1 week',
         ],
       },
       {
@@ -369,11 +479,12 @@ export const en: Translations = {
         period: '2025.11 – 2026.01',
         location: 'Chongqing',
         narrative:
-          'Led requirement research and prototyping for letter-management and value-added modules of the SaaS platform; drove the mini-program migration and iterated the personal transaction risk report product.',
+          'Iterated the personal transaction risk report and its value-added services, and led the product’s lightweight migration from Web to WeChat mini-program. Shaped the design of transaction-field expansion, visualisation modules and the legal-letter interface — delivering insight and decision support to 3C rental and lending clients.',
         highlights: [
-          'Set up a tri-party (sales / ops / customer) requirement-intake and priority log',
-          'Shipped the bill-ingest → parse → tag → structured-output pipeline',
-          'Contributed to default-prediction and user-segmentation risk models',
+          'Lightweight Migration: Led the SaaS-to-mini-program migration, enabling mobile push and reach',
+          'Pipeline Optimisation: Iterated the transaction-report recognition logic end-to-end, from parsing through structured output',
+          'Requirement Triage: Built a multi-stakeholder intake mechanism, unifying the product pool and prioritisation',
+          'Risk Modelling: Pulled features via SQL and contributed to the design of rental-default prediction models',
         ],
       },
       {
@@ -383,11 +494,11 @@ export const en: Translations = {
         period: '2024.11 – 2025.03',
         location: 'Beijing',
         narrative:
-          'Tracked AI frontiers (multimodal LLMs, agents, embodied AI), published 20+ weekly bulletins (~20,000 chars each) and contributed to the AI information-service database.',
+          'Tracked AI frontier technologies and built industry maps — covering multimodal LLMs, embodied AI and global vendor dynamics. Published 20+ weekly intelligence bulletins and contributed to the AI-company database, supplying high-signal intel for regional planning and strategy.',
         highlights: [
-          'Published 20+ in-depth weekly bulletins (~20k chars each)',
-          'Authored deep-dive analyses blending technical reports & evaluations',
-          'Shaped schema and data entry for the AI-company database',
+          'Frontier Tracking: Shipped 20+ in-depth weekly bulletins covering multimodal LLMs, embodied AI and agents',
+          'Industry Data Governance: Designed and maintained an AI-company profile database for structured research',
+          'Deep-Dive Authoring: Authored long-form analyses synthesising technical reports, company backgrounds and evaluations',
         ],
       },
       {
@@ -397,11 +508,26 @@ export const en: Translations = {
         period: '2024.07 – 2024.10',
         location: 'Shanghai',
         narrative:
-          'Monitored customer credit lines and risk exposure; built SQL-driven compliance reports and iterated customer-tiering and early-warning models.',
+          'Supported credit-risk and compliance management for cross-border digital marketing. Built SQL-driven compliance dashboards from Meta / TikTok data and monitored post-paid balance usage and repayments — underwriting fund safety and compliance for the company’s overseas ad-buy business.',
         highlights: [
-          'Spotted over-limit usage and co-ordinated BD to safeguard funds',
-          'Built daily media-compliance dashboards to drive control actions',
-          'Iterated risk models in step with evolving business logic',
+          'Media Compliance Monitoring: Used SQL to analyse Google / TikTok data and contain high-risk advertisers',
+          'Balance Alert: Monitored post-paid credit lines and intervened early to safeguard funds',
+          'Guarantor-Chain Audit: Traced cross-client guarantee links, surfacing latent risk and tightening the control system',
+          'Model Iteration: Joined regular reviews of the customer-tiering model, sharpening the precision of risk scoring',
+        ],
+      },
+      {
+        id: 'jll',
+        company: 'Jones Lang LaSalle (JLL) · Chengdu',
+        role: 'Research Intern',
+        period: '2024.02 – 2024.06',
+        location: 'Chengdu',
+        narrative:
+          'Covered the industrial & logistics real-estate market in Chengdu and Southwest China. Cleaned and modelled macro and logistics data, co-authoring quarterly and vertical reports that paired quantitative rigour with industry insight.',
+        highlights: [
+          'Industry Data Modelling: Maintained databases on EV-maker financials, domestic manufacturing footprints and the electronics-industry chain — framing industry-scale analysis',
+          'Spatial Analytics: Visualised supply-chain distribution in ArcGIS to sharpen logistics real-estate monitoring',
+          'Bilingual Reporting: Co-authored West-China logistics-real-estate quarterlies and vertical reports on EVs and Chengdu’s electronics chain, owning the data visualisations',
         ],
       },
     ],
@@ -411,59 +537,15 @@ export const en: Translations = {
     titlePrefix: 'Things',
     titleEmphasis: 'actually built.',
     description:
-      'Solo projects and internship deliverables — shipping code, data and prototypes in response to real-world questions.',
+      'Solo projects pulled live from GitHub, alongside research work from university — shipping code, data and prototypes in response to real-world questions.',
     scrollHint: 'Scroll to reveal →',
     worksCountSuffix: 'projects',
-    items: [
-      {
-        title: 'E-commerce Admin Database System',
-        subtitle:
-          'A solo project on SQL Server: full database design & implementation covering users, products, orders, marketing and after-sales.',
-        tag: 'Solo Project',
-        meta: '2025.10 · SQL Server · Streamlit',
-        accent: 'from-amber-300/40 to-orange-200/20',
-      },
-      {
-        title: 'AIGC Billing Management System',
-        subtitle:
-          'Wrote the end-to-end PRD covering 227 pricing rules (data model, API spec, batch import / export) for dual-currency monetisation.',
-        tag: 'Product Design',
-        meta: '2026 · PRD · Data Model',
-        accent: 'from-stone-300/50 to-neutral-200/20',
-      },
-      {
-        title: 'Personal Transaction Risk Report',
-        subtitle:
-          'Iterated the bill-ingest → parse → tag → structured-output pipeline, supporting rapid product evolution at an early-stage startup.',
-        tag: 'Data Product',
-        meta: '2025–2026 · SQL · Python',
-        accent: 'from-lime-300/35 to-amber-200/20',
-      },
-      {
-        title: 'AI Weekly Intelligence Reports',
-        subtitle:
-          '20+ weekly bulletins and long-form analyses on multimodal LLMs, agents and embodied AI — each around 20,000 characters.',
-        tag: 'Market Research',
-        meta: '2024–2025 · Industry Research',
-        accent: 'from-rose-300/40 to-amber-200/20',
-      },
-      {
-        title: 'Media Compliance Dashboard',
-        subtitle:
-          'SQL-backed daily compliance monitoring — flagging high-risk advertisers and driving control measures into the media-buying flow.',
-        tag: 'Risk Strategy',
-        meta: '2024 · SQL · Reporting',
-        accent: 'from-orange-200/45 to-yellow-100/20',
-      },
-      {
-        title: 'More Works Incubating',
-        subtitle:
-          'Side-projects and open-source work taking shape — AIGC interactions, data viz and product prototyping experiments.',
-        tag: 'Coming Soon',
-        meta: '2026 · Ongoing',
-        accent: 'from-stone-400/35 to-stone-200/20',
-      },
-    ],
+    viewRepo: 'View repo',
+    viewLive: 'Live demo',
+    viewDetail: 'View details',
+    updatedPrefix: 'Updated',
+    starsLabel: 'Stars',
+    noneYet: 'Syncing metadata…',
   },
   contact: {
     eyebrow: '04 — Contact',
@@ -487,6 +569,6 @@ export const en: Translations = {
   },
 }
 
-export const translations = { zh, en } as const
+export const translations = { zh, en }
 
 export type Locale = keyof typeof translations
