@@ -405,9 +405,17 @@
             '针对果茶酒行业：综合 PEST、SWOT 分析行业与企业，使用 K-means 聚类与 Logistic 回归建模消费者行为，结合 4P 与 STP 策略给出营销建议。担任组长，负责分工协调、市场现状与营销策划部分撰写，以及报告整理与排版美化。',
           files: [
             {
+              id: 'report',
               label: '调研报告',
               name: '“微醺元气，焕颜一新” · 营销建议报告.pdf',
               src: 'files/zhengda-cup-report.pdf',
+            },
+            {
+              id: 'showcase',
+              label: '产品展示',
+              type: 'iframe',
+              src: '/drink/showcase.html',
+              caption: '果茶酒订购小程序原型 · 产品展示',
             },
           ],
         },
@@ -447,21 +455,45 @@
           switcher.style.display = 'none'
         }
 
-        const encode = (src) => src.split('/').map(encodeURIComponent).join('/')
+        // Local paths (e.g. "files/foo.pdf", "/drink/showcase.html") must
+        // survive non-ASCII segments, hence segment-wise encoding.
+        const encode = (src) =>
+          src.split('/').map(encodeURIComponent).join('/')
 
         const activate = (index) => {
           const file = data.files[index]
+          const type = file.type || 'pdf'
           const encoded = encode(file.src)
-          const url = encoded + '#toolbar=1&navpanes=0&view=FitH'
-          frame.src = url
-          openNew.href = encoded
-          download.href = encoded
-          download.setAttribute('download', file.name)
-          caption.textContent = '正在预览：' + file.name
+
+          if (type === 'iframe') {
+            frame.src = encoded
+            frame.title = file.caption || file.label
+            openNew.href = encoded
+            download.hidden = true
+            caption.textContent = file.caption || ''
+          } else {
+            const url = encoded + '#toolbar=1&navpanes=0&view=FitH'
+            frame.src = url
+            frame.title = 'PDF 预览'
+            openNew.href = encoded
+            download.hidden = false
+            download.href = encoded
+            download.setAttribute('download', file.name || '')
+            caption.textContent = file.name ? '正在预览：' + file.name : ''
+          }
+
           switcher.querySelectorAll('button').forEach((btn, i) => {
             btn.classList.toggle('active', i === index)
             btn.setAttribute('aria-selected', i === index ? 'true' : 'false')
           })
+
+          // Keep the URL ?tab= param in sync so the current view is
+          // shareable / refresh-safe — but only when an id is defined.
+          if (file.id) {
+            const url = new URL(window.location.href)
+            url.searchParams.set('tab', file.id)
+            window.history.replaceState(null, '', url)
+          }
         }
 
         data.files.forEach((file, i) => {
@@ -473,7 +505,14 @@
           switcher.appendChild(btn)
         })
 
-        activate(0)
+        // Pick the tab requested via `?tab=<id>`, falling back to 0.
+        const tabParam = (params.get('tab') || '').toLowerCase()
+        const requestedIndex = tabParam
+          ? data.files.findIndex(
+              (f) => (f.id || '').toLowerCase() === tabParam,
+            )
+          : -1
+        activate(requestedIndex >= 0 ? requestedIndex : 0)
       }
     </script>
   </body>

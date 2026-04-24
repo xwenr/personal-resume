@@ -57,6 +57,12 @@ export type WorkConfig = {
    * Falls back to the GitHub URL if not set.
    */
   externalUrl?: string
+  /**
+   * Optional "live demo / showcase" link. Takes precedence over the
+   * GitHub repo's `homepage` field. Use for hand-picked demo URLs
+   * (e.g. an embedded showcase hosted elsewhere in /public).
+   */
+  liveUrl?: string
 }
 
 export const WORKS_CONFIG: WorkConfig[] = [
@@ -120,6 +126,8 @@ export const WORKS_CONFIG: WorkConfig[] = [
     },
     accent: 'from-rose-300/40 to-amber-200/20',
     cover: '/works/fruit-tea-liquor.png',
+    // Opens the awards viewer with the Showcase tab pre-activated.
+    liveUrl: '/awards/index.html?id=zhengda&tab=showcase',
   },
   {
     slug: 'more-coming',

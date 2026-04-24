@@ -34,6 +34,8 @@ export type ResolvedWork = {
   cover?: string
   mockVariant?: 0 | 1 | 2
   ctaUrl?: string
+  /** Live demo / showcase link; config-level override beats GitHub homepage. */
+  liveUrl?: string
   github?: GithubMeta
 }
 
@@ -119,6 +121,7 @@ export function resolveWorks(lang: Locale): ResolvedWork[] {
       cover: w.cover,
       mockVariant: w.mockVariant,
       ctaUrl: w.externalUrl ?? github?.url,
+      liveUrl: w.liveUrl || github?.homepage || undefined,
       github,
     }
   })

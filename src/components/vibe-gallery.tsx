@@ -266,7 +266,7 @@ function Polaroid({
 }) {
   const tilt = index % 2 === 0 ? -1.5 : 1.5
   const { github, ctaUrl } = item
-  const liveUrl = github?.homepage || undefined
+  const liveUrl = item.liveUrl
   const hasFootRow = Boolean(github) || Boolean(ctaUrl) || Boolean(liveUrl)
 
   return (
