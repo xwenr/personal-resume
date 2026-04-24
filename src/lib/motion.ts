@@ -140,6 +140,75 @@ export const staggerContainer = (
 })
 
 /* -------------------------------------------------------------------------- */
+/*  Parallax — scroll-driven vertical drift presets.                          */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Asymmetric parallax speed presets, used as the `outputRange` of
+ * `useTransform(scrollYProgress, [0, 1], PARALLAX_*)` on a section-
+ * local scroll progress. The result is a `MotionValue<string>` that
+ * feeds directly into `style={{ y }}`.
+ *
+ * Three layers give you Z-axis depth:
+ *   - `PARALLAX_SLOW`    (0% → 20%)  background drifts DOWN, feels far
+ *   - `PARALLAX_MEDIUM`  (0% → 6%)   midground, used sparingly
+ *   - `PARALLAX_FAST`    (0% → -8%)  foreground drifts UP, "catches" you
+ *
+ * WHY 20% AND NOT 12% (the old value, bumped up after real testing):
+ *   The first pass capped this at 12% on the theory that text-adjacent
+ *   drift would read as jitter. In practice that was backwards: 12% of
+ *   section height is only ~100-150px on a typical viewport, and at
+ *   that magnitude the parallax is imperceptible UNLESS the drifting
+ *   layer has a strong visual motif (a shape, a photo, a texture with
+ *   a clear silhouette). An invisible "soft light blob" drifting 12%
+ *   just produces no depth cue at all — the user sees a flat page.
+ *   20% is the threshold where eye + brain actually register the
+ *   relative motion as Z-axis separation. If the backing asset is a
+ *   flat gradient with nothing to anchor onto, 20% still won't help;
+ *   use a texture, shadow image, or display motif as the anchor and
+ *   20% will do its job.
+ *
+ *   Fast layer stays at -8% (not symmetric -20%) because upward motion
+ *   competes with the user's own downward scroll and the perceived
+ *   speed multiplies. In practice, even -8% tends to compete with a
+ *   child's own `whileInView` reveal (the child's y: 24 → 0 happens in
+ *   the drifting parent's coordinate space, so the reveal's ease-out
+ *   curve gets visibly muddied by the parent's linear drift). If you
+ *   wrap content with `PARALLAX_FAST`, make sure the children have NO
+ *   reveal variants of their own — or skip the fast layer entirely.
+ *
+ * DO NOT apply these to body text elements directly. Two reasons:
+ *   1. `style.y` and `variants.y` / `animate.y` BOTH write to the
+ *      `transform` channel. A paragraph that already has `whileInView`
+ *      with a `y: 24 → 0` reveal will fight `style.y` (last writer
+ *      wins, reveal becomes visually undefined).
+ *   2. Sub-pixel `translateY` values soften glyph edges — the browser
+ *      can no longer snap text rasterisation to the device pixel grid.
+ *
+ * SAFE TARGETS:
+ *   - Decorative image / texture layers (absolute-positioned PNG or
+ *     SVG with NO reveal variant of their own) — the canonical use.
+ *   - Large display headlines (font-size ≥ 3rem) where sub-pixel
+ *     softening is imperceptible, AND which are NOT already inside a
+ *     `staggerContainer` + `maskRise` rig.
+ *   - OUTER WRAPPERS around text clusters where the children keep
+ *     their own reveal variants — BUT only the SLOW / MEDIUM layer,
+ *     never FAST (see note above).
+ *
+ * Requires a smooth-scroll driver (Lenis in this repo via
+ * `useSmoothScroll`) to feel liquid — a native scroll's one-frame
+ * jumps make parallax at these low offsets look stepped, not drifted.
+ */
+// Typed as mutable `[string, string]` (NOT `as const`) on purpose:
+// framer-motion's `useTransform` overloads require a mutable
+// `unknown[]` outputRange; a `readonly` tuple from `as const` is
+// rejected at compile time. `[string, string]` still constrains us to
+// exactly two stops, which is all we want.
+export const PARALLAX_SLOW: [string, string] = ['0%', '20%']
+export const PARALLAX_MEDIUM: [string, string] = ['0%', '6%']
+export const PARALLAX_FAST: [string, string] = ['0%', '-8%']
+
+/* -------------------------------------------------------------------------- */
 /*  Macro curtains — whole-page / whole-asset entries.                        */
 /* -------------------------------------------------------------------------- */
 
