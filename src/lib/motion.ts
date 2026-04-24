@@ -46,6 +46,14 @@ export const revealViewport = {
   margin: '-100px',
 } as const
 
+/**
+ * Per-word mask-rise stagger. 0.08s is the editorial sweet spot — fast
+ * enough that long headings don't crawl, slow enough that each word is
+ * individually legible as it rises. Exported so `<MaskedText>` and any
+ * ad-hoc mask sequence (e.g. Hero h1) read from a single source.
+ */
+export const MASK_STAGGER = 0.08
+
 /* -------------------------------------------------------------------------- */
 /*  Variants — composable building blocks.                                    */
 /* -------------------------------------------------------------------------- */
@@ -120,6 +128,55 @@ export const staggerContainer = (
     },
   },
 })
+
+/* -------------------------------------------------------------------------- */
+/*  Macro curtains — whole-page / whole-asset entries.                        */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Site-wide entry curtain — wraps `<main>` once on mount so the whole
+ * document arrives with a single unified "welcome" gesture instead of
+ * each section individually fading in underneath the first one. This is
+ * the closest thing we have to a page transition in a routerless long-
+ * scroll SPA; it fires exactly once per visit and does NOT replay on
+ * language switch (per-section `key={lang}` handles that narrower case).
+ *
+ * scale 0.98 → 1 + y 40 → 0 + opacity 0 → 1 is intentionally subtle —
+ * the dramatic work is done by the Hero's clip-path video reveal
+ * underneath; the curtain's job is just to make the first paint feel
+ * intentional rather than abrupt.
+ */
+export const curtainReveal: Variants = {
+  hidden: { opacity: 0, scale: 0.98, y: 40 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { duration: DURATION.long, ease: EASE },
+  },
+}
+
+/**
+ * Cinematic clip-path curtain — for large visual assets (hero video,
+ * full-bleed imagery) that should "arrive" instead of "appear". Starts
+ * fully hidden behind its own top edge (`inset(100% 0 0 0)`) and wipes
+ * open downward.
+ *
+ * Pair with a subtle `scale: 1.1 → 1.0` on the INNER `<motion.img>` /
+ * `<motion.video>` so the subject breathes forward while the curtain
+ * opens — the composite reads as a camera push, not a CSS effect.
+ *
+ * 1.5s is deliberately longer than `DURATION.long` because a clip-path
+ * reveal on its own feels too fast at 1.2s — the eye hasn't located the
+ * element before it's already done.
+ */
+export const clipCurtain: Variants = {
+  hidden: { clipPath: 'inset(100% 0 0 0)' },
+  visible: {
+    clipPath: 'inset(0% 0% 0% 0%)',
+    transition: { duration: 1.5, ease: EASE },
+  },
+}
 
 /* -------------------------------------------------------------------------- */
 /*  Hover physics — liquid-glass tactile response.                            */

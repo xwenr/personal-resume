@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useScroll } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 
 import { BackgroundVideo } from '@/components/background-video'
@@ -15,12 +16,26 @@ export function Hero() {
   const { t, lang } = useTranslation()
   const hero = t.hero
 
+  // Track Hero's scroll progress so BackgroundVideo can parallax-drift
+  // independently of page scroll speed. `start start` → progress is 0
+  // when the section top meets the viewport top; `end start` → progress
+  // is 1 when the section bottom leaves the viewport top (i.e. the
+  // user has scrolled exactly one hero height past it). This range is
+  // the classic "hero parallax" window and keeps the video's y-transform
+  // perfectly bounded regardless of hero height.
+  const heroRef = useRef<HTMLElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start'],
+  })
+
   return (
     <section
       id="hero"
+      ref={heroRef}
       className="relative h-screen w-full overflow-hidden"
     >
-      <BackgroundVideo />
+      <BackgroundVideo scrollYProgress={scrollYProgress} />
 
       {/* Very light warm wash — ties the video into the beige palette
           without fogging it (20% beige ≈ paper-thin gauze). */}
@@ -38,12 +53,24 @@ export function Hero() {
           sequence instead of each child self-scheduling. `initial='hidden'
           animate='visible'` (not whileInView) because Hero is above the
           fold on load — the reveal must fire immediately on mount, not
-          when the user scrolls. */}
+          when the user scrolls.
+
+          `delayChildren: 0.5` is NOT the old 0.15 — it was raised after
+          BackgroundVideo graduated to a 1.5s clip-path curtain. The
+          video wipes open from the top for the first ~0.5s, revealing
+          only sky/dark background where the headline will eventually
+          sit. If the text cascade starts at 0.15s, the eyebrow and
+          first headline words animate into that still-dark region and
+          land on an unfinished background — visually reads as a race
+          condition. 0.5s lets the video curtain cross the centre of the
+          frame first so the eye has something to focus on BEFORE the
+          text arrives, and the two reveals feel co-ordinated instead of
+          competing. */}
       <motion.div
         key={lang}
         initial="hidden"
         animate="visible"
-        variants={staggerContainer(0.08, 0.15)}
+        variants={staggerContainer(0.08, 0.5)}
         className="relative z-10 flex h-full w-full flex-col"
       >
         <div className="flex-1" />
