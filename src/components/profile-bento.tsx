@@ -4,20 +4,31 @@ import { ArrowUpRight, GraduationCap, Sparkles, Trophy } from 'lucide-react'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { useTranslation } from '@/i18n/language-context'
 import { cn } from '@/lib/utils'
+import { fadeUp, HOVER_CARD, revealViewport, staggerContainer } from '@/lib/motion'
 
-const EASE = [0.22, 1, 0.36, 1] as const
+type BentoCardProps = HTMLMotionProps<'div'>
 
-type BentoCardProps = HTMLMotionProps<'div'> & {
-  delay?: number
-}
-
-function BentoCard({ className, children, delay = 0, ...props }: BentoCardProps) {
+/**
+ * Individual bento card.
+ *
+ * Reveal is driven by the PARENT grid's `staggerContainer`, NOT by each
+ * card's own `whileInView`. This matters because:
+ *
+ *  1. A single stagger source produces a smooth cascade even if two cards
+ *     happen to enter the viewport on the same frame (they'll still fire
+ *     at the parent-defined 0.1s interval, not simultaneously).
+ *  2. The parent knows the final layout order regardless of responsive
+ *     column shuffling, so the cascade always reads top-left → bottom-right.
+ *
+ * Hover physics live on framer-motion's `whileHover` (transform channel);
+ * shadow / background / border highlight live on CSS `.glass-hover` (see
+ * index.css). Two engines, two channels, zero contention.
+ */
+function BentoCard({ className, children, ...props }: BentoCardProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.8, ease: EASE, delay }}
+      variants={fadeUp}
+      whileHover={HOVER_CARD}
       className={cn(
         'liquid-glass glass-hover group relative flex flex-col overflow-hidden p-7',
         className,
@@ -50,7 +61,18 @@ export function ProfileBento() {
           className="mb-14"
         />
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:auto-rows-[minmax(14rem,auto)] lg:grid-cols-4">
+        {/* Grid is the stagger orchestrator. One `whileInView` on the parent
+            drives every child via `variants`, replacing the previous
+            pattern of each card self-triggering with a hand-picked delay.
+            `delayChildren: 0.15` buys just enough time after viewport entry
+            for the user's eye to arrive, THEN the cascade starts. */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={revealViewport}
+          variants={staggerContainer(0.1, 0.15)}
+          className="grid grid-cols-1 gap-4 md:grid-cols-3 md:auto-rows-[minmax(14rem,auto)] lg:grid-cols-4"
+        >
           {/* Card 1 — Education.
               Modern resume layout:
                 Row 1  University name (anchor)  ·  985 / 双一流 badges
@@ -60,10 +82,7 @@ export function ProfileBento() {
                 label  "核心课程"        → flex-wrap list with • separator
                 label  "荣誉"           → honours paragraph
               Horizontal divider between Master / Bachelor with py-6 padding. */}
-          <BentoCard
-            className="md:col-span-2 md:row-span-2 lg:col-span-2 lg:row-span-2"
-            delay={0.05}
-          >
+          <BentoCard className="md:col-span-2 md:row-span-2 lg:col-span-2 lg:row-span-2">
             <div className="flex items-center gap-3 text-muted-foreground">
               <GraduationCap className="h-4 w-4" />
               <span className="text-xs uppercase tracking-[0.25em]">
@@ -161,10 +180,7 @@ export function ProfileBento() {
           </BentoCard>
 
           {/* Card 2 — Core Skills, categorised list */}
-          <BentoCard
-            className="md:row-span-2 lg:col-span-2 lg:row-span-2"
-            delay={0.1}
-          >
+          <BentoCard className="md:row-span-2 lg:col-span-2 lg:row-span-2">
             <div className="flex items-center gap-3 text-muted-foreground">
               <Sparkles className="h-4 w-4" />
               <span className="text-xs uppercase tracking-[0.25em]">
@@ -205,10 +221,7 @@ export function ProfileBento() {
           </BentoCard>
 
           {/* Card 3 — Awards (full-width, vertical list) */}
-          <BentoCard
-            className="md:col-span-3 md:row-span-2 lg:col-span-4"
-            delay={0.15}
-          >
+          <BentoCard className="md:col-span-3 md:row-span-2 lg:col-span-4">
             <div className="flex items-center gap-3 text-muted-foreground">
               <Trophy className="h-4 w-4" />
               <span className="text-xs uppercase tracking-[0.25em]">
@@ -255,7 +268,7 @@ export function ProfileBento() {
               ))}
             </ul>
           </BentoCard>
-        </div>
+        </motion.div>
       </div>
     </section>
   )

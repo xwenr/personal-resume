@@ -2,6 +2,7 @@ import * as React from 'react'
 import { motion } from 'framer-motion'
 
 import { cn } from '@/lib/utils'
+import { DURATION, EASE, revealViewport } from '@/lib/motion'
 
 interface SectionHeadingProps {
   eyebrow?: string
@@ -22,8 +23,8 @@ export function SectionHeading({
     <motion.header
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-100px' }}
-      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      viewport={revealViewport}
+      transition={{ duration: DURATION.default, ease: EASE }}
       className={cn(
         'flex flex-col gap-4',
         align === 'center' ? 'items-center text-center' : 'items-start',

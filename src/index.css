@@ -121,19 +121,23 @@
   border-radius: 1rem;
 }
 
-/* Hover lift used by buttons and cards */
+/* Hover lift used by buttons and cards. We deliberately DO NOT animate
+   `transform` here — framer-motion's `whileHover` owns the transform
+   channel (see src/lib/motion.ts `HOVER_CARD` / `HOVER_BUTTON`). If both
+   engines drove `transform`, every hover would flicker at the hand-off
+   as one framework took over from the other. CSS keeps ownership of the
+   purely visual "light hitting the glass" properties: shadow, background
+   brightness, and border luminance. */
 .glass-hover {
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-hover:hover {
-  transform: translateY(-2px) scale(1.01);
-  box-shadow: 0 10px 30px rgba(58, 46, 42, 0.08);
-  background-color: rgba(245, 242, 233, 0.65);
-  border-color: rgba(58, 46, 42, 0.14);
+  box-shadow: 0 12px 36px rgba(58, 46, 42, 0.09);
+  background-color: rgba(245, 242, 233, 0.7);
+  border-color: rgba(58, 46, 42, 0.18);
 }
 
 /* Marquee fallback for horizontal gallery */

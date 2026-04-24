@@ -2,9 +2,8 @@ import { motion } from 'framer-motion'
 import { Mail, Phone } from 'lucide-react'
 
 import { useTranslation } from '@/i18n/language-context'
+import { EASE } from '@/lib/motion'
 import { cn } from '@/lib/utils'
-
-const EASE = [0.22, 1, 0.36, 1] as const
 
 export function CtaFooter() {
   const { t, lang } = useTranslation()

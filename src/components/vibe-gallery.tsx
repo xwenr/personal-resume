@@ -9,6 +9,7 @@ import { formatStars, languageColour, relativeTime } from '@/lib/github'
 import { useTranslation } from '@/i18n/language-context'
 import type { Locale } from '@/i18n/translations'
 import { cn } from '@/lib/utils'
+import { DURATION, EASE } from '@/lib/motion'
 
 // Tailwind's `md` breakpoint — below this we fall back to native horizontal
 // snap scrolling, which feels more natural on touch devices than hijacked
@@ -274,7 +275,7 @@ function Polaroid({
       initial={{ opacity: 0, y: 40, rotate: tilt * 0.4 }}
       whileInView={{ opacity: 1, y: 0, rotate: tilt }}
       viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: DURATION.default, ease: EASE }}
       whileHover={{ y: -6, rotate: 0, scale: 1.02 }}
       className="liquid-glass group relative flex w-[320px] shrink-0 snap-start flex-col overflow-hidden p-5 sm:w-[380px] md:w-[440px]"
     >

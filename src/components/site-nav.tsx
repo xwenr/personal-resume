@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion, useMotionValueEvent, useScroll } from 'framer-motion'
 
 import { useTranslation } from '@/i18n/language-context'
+import { EASE } from '@/lib/motion'
 import { cn } from '@/lib/utils'
 
 export function SiteNav() {
@@ -29,7 +30,7 @@ export function SiteNav() {
     <motion.nav
       initial={{ opacity: 0, y: -12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+      transition={{ duration: 0.9, ease: EASE, delay: 0.2 }}
       className="fixed inset-x-0 top-0 z-50 mx-auto flex w-[min(96%,80rem)] items-center justify-between bg-transparent px-6 py-6"
     >
       <a
@@ -46,7 +47,7 @@ export function SiteNav() {
           key={lang}
           initial={{ opacity: 0, y: 4 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.35, ease: EASE }}
           className="inline-block"
         >
           {t.nav.brand}

@@ -5,8 +5,12 @@ import { Badge } from '@/components/ui/badge'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { useTranslation } from '@/i18n/language-context'
 import { cn } from '@/lib/utils'
-
-const EASE = [0.22, 1, 0.36, 1] as const
+import {
+  fadeUp,
+  HOVER_CARD,
+  revealViewport,
+  staggerContainer,
+} from '@/lib/motion'
 
 const MOCK_COMPONENTS: Record<string, React.FC> = {
   'haima-cloud': AigcModelsMock,
@@ -42,16 +46,23 @@ export function ExperienceSplit() {
           {exp.items.map((item, i) => {
             const Mock = MOCK_COMPONENTS[item.id] ?? AigcModelsMock
             return (
+              // Each item is its own stagger container so the narrative
+              // column and the mock column arrive with a slight offset,
+              // producing a subtle "editorial split" read. Odd rows flip
+              // order via `md:order-*` so the stagger still feels natural
+              // (the column you read first enters first, regardless of
+              // which side of the page it sits on).
               <motion.article
                 key={item.id}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: 0.9, ease: EASE }}
+                initial="hidden"
+                whileInView="visible"
+                viewport={revealViewport}
+                variants={staggerContainer(0.15, 0)}
                 className="grid grid-cols-1 items-center gap-8 md:grid-cols-12 md:gap-12"
               >
                 {/* LEFT — narrative */}
-                <div
+                <motion.div
+                  variants={fadeUp}
                   className={cn(
                     'md:col-span-7',
                     i % 2 === 1 && 'md:order-2',
@@ -94,33 +105,28 @@ export function ExperienceSplit() {
                       </li>
                     ))}
                   </ul>
-                </div>
+                </motion.div>
 
                 {/* RIGHT — visual mock */}
-                <div
+                <motion.div
+                  variants={fadeUp}
+                  whileHover={HOVER_CARD}
                   className={cn(
+                    'liquid-glass glass-hover relative aspect-[5/4] w-full overflow-hidden p-6',
                     'md:col-span-5',
                     i % 2 === 1 && 'md:order-1',
                   )}
                 >
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.96 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true, margin: '-100px' }}
-                    transition={{ duration: 1, ease: EASE, delay: 0.1 }}
-                    className="liquid-glass glass-hover relative aspect-[5/4] w-full overflow-hidden p-6"
-                  >
-                    <div className="flex items-start justify-between text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-                      <span className="max-w-[75%] truncate">
-                        {item.company}
-                      </span>
-                      <span>0{i + 1}</span>
-                    </div>
-                    <div className="absolute inset-0 flex items-center justify-center p-8">
-                      <Mock />
-                    </div>
-                  </motion.div>
-                </div>
+                  <div className="flex items-start justify-between text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+                    <span className="max-w-[75%] truncate">
+                      {item.company}
+                    </span>
+                    <span>0{i + 1}</span>
+                  </div>
+                  <div className="absolute inset-0 flex items-center justify-center p-8">
+                    <Mock />
+                  </div>
+                </motion.div>
               </motion.article>
             )
           })}
