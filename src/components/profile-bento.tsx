@@ -230,40 +230,80 @@ export function ProfileBento() {
             </div>
             <ul className="mt-6 flex flex-1 flex-col divide-y divide-foreground/10">
               {profile.awards.items.map((award) => (
+                // `group/award` scopes hover state to a single row so
+                // ANY hover on the row (not just on the pill) brightens
+                // the "查看详情" affordance — strong visual cue that
+                // the whole entry is actionable.
                 <li
                   key={`${award.title}-${award.year}`}
-                  className="flex flex-1 items-start justify-between gap-6 py-5 first:pt-0 last:pb-0"
+                  className="group/award flex flex-1 items-start justify-between gap-6 py-5 first:pt-0 last:pb-0"
                 >
-                  <div className="flex min-w-0 flex-col">
-                    <span className="text-base font-medium text-foreground md:text-lg">
-                      {award.title}
-                    </span>
-                    {award.rank && (
-                      <span className="mt-0.5 text-sm text-muted-foreground">
-                        {award.rank}
+                  <div className="flex min-w-0 flex-1 flex-col">
+                    {/* Header row — competition title sits shoulder-to-
+                        shoulder with the rank badge, so the proof-of-
+                        capability is read IMMEDIATELY after the event
+                        name instead of hiding as muted sub-text.
+                        `flex-wrap` lets the badge drop to a new line
+                        only on very narrow titles; `gap-y-2` preserves
+                        rhythm when that happens. */}
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                      <span className="text-base font-medium leading-snug text-foreground md:text-lg">
+                        {award.title}
                       </span>
-                    )}
+                      {award.rank && (
+                        // Editorial chip — square-ish radius + visible
+                        // border + semibold foreground text make it
+                        // read as a "premium label", not a tag soup
+                        // bubble. Uses the project's warm-paper palette
+                        // (`foreground/*` tokens) instead of literal
+                        // black so it harmonises with the surrounding
+                        // beige glass cards.
+                        <span className="inline-flex items-center rounded-md border border-foreground/15 bg-foreground/[0.06] px-2.5 py-0.5 text-xs font-semibold tracking-[0.01em] text-foreground">
+                          {award.rank}
+                        </span>
+                      )}
+                    </div>
                     {award.description && (
-                      <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+                      <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
                         {award.description}
                       </p>
                     )}
                   </div>
-                  {award.link ? (
-                    <a
-                      href={award.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group/link inline-flex shrink-0 items-center gap-1.5 font-display text-2xl tracking-tight text-foreground/80 transition-colors hover:text-foreground md:text-3xl"
-                    >
-                      {award.year}
-                      <ArrowUpRight className="h-4 w-4 opacity-60 transition-opacity group-hover/link:opacity-100" />
-                    </a>
-                  ) : (
-                    <span className="shrink-0 font-display text-2xl tracking-tight text-foreground/80 md:text-3xl">
+
+                  {/* Right-hand stack: year as a typographic anchor,
+                      then an explicit "View details →" pill so first-
+                      time visitors can see at a glance that each entry
+                      links out to a deeper write-up. */}
+                  <div className="flex shrink-0 flex-col items-end gap-3">
+                    <span className="font-display text-2xl leading-none tracking-tight text-foreground/80 md:text-3xl">
                       {award.year}
                     </span>
-                  )}
+                    {award.link && (
+                      <a
+                        href={award.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`${award.title} — ${profile.awards.viewDetailLabel}`}
+                        className={cn(
+                          'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full',
+                          'border border-foreground/25 bg-foreground/[0.03]',
+                          'px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.15em] text-foreground/85',
+                          'transition-all duration-300 ease-out',
+                          // Direct hover on the pill — full contrast invert
+                          'hover:border-foreground hover:bg-foreground hover:text-background',
+                          // Row-level hover — subtle lift so the pill
+                          // "wakes up" before the cursor even reaches it
+                          'group-hover/award:border-foreground/55 group-hover/award:bg-foreground/10 group-hover/award:text-foreground',
+                        )}
+                      >
+                        {profile.awards.viewDetailLabel}
+                        <ArrowUpRight
+                          className="h-3 w-3 transition-transform duration-300 ease-out group-hover/award:-translate-y-0.5 group-hover/award:translate-x-0.5"
+                          strokeWidth={1.8}
+                        />
+                      </a>
+                    )}
+                  </div>
                 </li>
               ))}
             </ul>

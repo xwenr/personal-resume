@@ -121,6 +121,7 @@ export const zh = {
     },
     awards: {
       eyebrow: '竞赛与荣誉',
+      viewDetailLabel: '查看详情',
       items: [
         {
           year: '2024.04',
@@ -403,6 +404,7 @@ export const en: Translations = {
     },
     awards: {
       eyebrow: 'Competitions & Honours',
+      viewDetailLabel: 'View details',
       items: [
         {
           year: '2024.04',
