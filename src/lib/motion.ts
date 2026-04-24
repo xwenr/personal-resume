@@ -32,6 +32,16 @@ export const EASE = [0.16, 1, 0.3, 1] as const
 
 export const EASE_OUT_SOFT = 'easeOut' as const
 
+/**
+ * Symmetric ease-in-out ("quart") — slow start, fast middle, slow finish.
+ * Reserved for BIG one-shot gestures where both the beginning and the
+ * ending need to feel deliberate (e.g. a circular iris reveal that
+ * starts from a single point and ends past the screen corners). Do NOT
+ * use this for scroll-triggered section reveals — the slow start fights
+ * the user's downward momentum and reads as laggy.
+ */
+export const EASE_IN_OUT_QUART = [0.76, 0, 0.24, 1] as const
+
 export const DURATION = {
   /** Micro-interactions (hover, tap, small state changes). */
   micro: 0.4,
@@ -157,24 +167,30 @@ export const curtainReveal: Variants = {
 }
 
 /**
- * Cinematic clip-path curtain — for large visual assets (hero video,
- * full-bleed imagery) that should "arrive" instead of "appear". Starts
- * fully hidden behind its own top edge (`inset(100% 0 0 0)`) and wipes
- * open downward.
+ * Cinematic "iris" reveal — a circle expands from dead centre out past
+ * the screen corners, uncovering the subject like a camera aperture
+ * opening. Pair with a subtle `scale: 1.1 → 1.0` on the INNER
+ * `<motion.img>` / `<motion.video>` (matching 1.8s duration) so the
+ * subject breathes forward while the circle opens — the composite
+ * reads as a lens opening, not a CSS animation.
  *
- * Pair with a subtle `scale: 1.1 → 1.0` on the INNER `<motion.img>` /
- * `<motion.video>` so the subject breathes forward while the curtain
- * opens — the composite reads as a camera push, not a CSS effect.
+ * Why `circle(150% …)` and not `100%`: the CSS spec pegs the `%` radius
+ * to `sqrt(w² + h²) / sqrt(2)`, so on a square viewport `circle(100%)`
+ * stops at the edges and `circle(≈70.7%)` is the corners. 150% is a
+ * generous safety margin that guarantees the reveal ends as a flat
+ * colour field regardless of aspect ratio — no visible growing disc at
+ * the corners on ultrawide monitors.
  *
- * 1.5s is deliberately longer than `DURATION.long` because a clip-path
- * reveal on its own feels too fast at 1.2s — the eye hasn't located the
- * element before it's already done.
+ * Why 1.8s + symmetric `EASE_IN_OUT_QUART` (not `EASE` / ease-out-expo):
+ * the slow START is what sells the "aperture opening" metaphor — the
+ * circle hesitates, then accelerates out. With an ease-out curve the
+ * reveal pops open instantly and reads as a JPEG fade, not a lens.
  */
-export const clipCurtain: Variants = {
-  hidden: { clipPath: 'inset(100% 0 0 0)' },
+export const irisReveal: Variants = {
+  hidden: { clipPath: 'circle(0% at 50% 50%)' },
   visible: {
-    clipPath: 'inset(0% 0% 0% 0%)',
-    transition: { duration: 1.5, ease: EASE },
+    clipPath: 'circle(150% at 50% 50%)',
+    transition: { duration: 1.8, ease: EASE_IN_OUT_QUART },
   },
 }
 
