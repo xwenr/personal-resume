@@ -76,17 +76,13 @@ function App() {
         >
           <Hero />
           <ProfileBento />
-          <ExperienceSplit />
           {/*
-            `<AboutBridge />` sits deliberately between Experience (02) and
-            Works (03) — a single-screen "breath" with one line of
-            statement copy and one 4:3 vibe-anchor image. See the
-            component itself for the rationale; the ordering matters
-            because the two flanking sections are the densest reading
-            blocks on the page, and without a rest beat they collapse
-            into one long résumé dump.
+            `<AboutBridge />` (02½ — 关于我) sits after Profile (01) and
+            before Experience (02) — a breath before the internship
+            timeline. See `about-bridge.tsx` for layout rationale.
           */}
           <AboutBridge />
+          <ExperienceSplit />
           <VibeGallery />
           <CtaFooter />
         </motion.main>

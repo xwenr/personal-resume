@@ -257,6 +257,8 @@ export const zh = {
     description:
       '从 GitHub 同步的独立项目与课余研究 —— 用代码、数据与原型，回应真实场景的问题。',
     scrollHint: '向右滚动查看 →',
+    scrollPrev: '上一项作品',
+    scrollNext: '下一项作品',
     worksCountSuffix: '个项目',
     viewRepo: '查看仓库',
     viewLive: '在线预览',
@@ -267,7 +269,7 @@ export const zh = {
   },
   contact: {
     eyebrow: '04 — 联系方式',
-    titleWords: ['让我们', '一起', '构建吧。'],
+    titleWords: ['期待与你产生新的', '连接。'],
     description:
       '正在寻求 2026 秋招产品经理 / 数据产品相关机会；也欢迎关于 AIGC、研究与产品体验的任何交流。',
     downloadResume: '下载简历',
@@ -554,6 +556,8 @@ export const en: Translations = {
     description:
       'Solo projects pulled live from GitHub, alongside research work from university — shipping code, data and prototypes in response to real-world questions.',
     scrollHint: 'Scroll to reveal →',
+    scrollPrev: 'Previous project',
+    scrollNext: 'Next project',
     worksCountSuffix: 'projects',
     viewRepo: 'View repo',
     viewLive: 'Live demo',

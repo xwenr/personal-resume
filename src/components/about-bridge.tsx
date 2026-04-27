@@ -43,17 +43,14 @@ import {
 const ABOUT_PARALLAX: [string, string] = ['0%', '25%']
 
 /**
- * `<AboutBridge />` — the editorial "breath" between Experience (02)
- * and Works (03).
+ * `<AboutBridge />` — the editorial "breath" after Profile (01) and
+ * before Experience (02); Works (03) still follows downstream.
  *
  * Why it exists:
- *   Experience and Works are both dense, reading-heavy sections —
- *   five internship write-ups + a horizontal gallery of projects.
- *   Slammed back-to-back they read as one long résumé dump and the
- *   voice of the site flattens. A single-screen transition block
- *   with one line of statement copy and one vibe-anchor image lets
- *   the eye rest, re-calibrates the tempo, and re-introduces the
- *   author as a person before the next dense block starts.
+ *   Profile and Experience are both dense, reading-heavy blocks.
+ *   A single-screen transition with statement copy and a vibe-anchor
+ *   image lets the eye rest and re-introduces the author before the
+ *   internship timeline.
  *
  * Composition:
  *   - 2-column grid (12-col track): 5 image / 7 copy.
@@ -67,8 +64,8 @@ const ABOUT_PARALLAX: [string, string] = ['0%', '25%']
  *   `items-center` on the grid means the copy is vertically aligned
  *   to the image's midline, so the eye sweeps horizontally across
  *   a single editorial line rather than scanning top-to-bottom on
- *   both columns (the latter would make it feel like another
- *   Experience row).
+ *   both columns (the latter would make it feel like another dense
+ *   résumé row).
  *
  * What is deliberately NOT here:
  *   - No SectionHeading. This block IS the heading; layering another
@@ -143,8 +140,8 @@ export function AboutBridge() {
           • Wrapper = static, anchored `-top-[28%] bottom-0`,
             `overflow-hidden`. This is a fixed clipping window that
             NEVER moves and NEVER bleeds out of the section's bottom
-            edge. `-top-[28%]` lets the window bleed up generously
-            (≈ 1/4 of section height) into ExperienceSplit so the
+            edge.             `-top-[28%]` lets the window bleed up generously
+            (≈ 1/4 of section height) into ProfileBento so the
             texture reads as drifting in from above rather than
             starting at this section's top edge. `bottom-0` extends
             the window all the way to the section seam — the texture
@@ -172,9 +169,9 @@ export function AboutBridge() {
             edges is scissored by `overflow-hidden` and cannot reach
             VibeGallery — geometry guarantees no ghost.
 
-          The mask gradient stays symmetric (`transparent 0%, black
+          The mask gradient stays           symmetric (`transparent 0%, black
           22%, black 76%, transparent 100%`) so both the top edge
-          (against Experience) and the bottom edge (against the
+          (against Profile) and the bottom edge (against the
           fade overlay below) feather out instead of cutting hard.
           The 22% / 24% fade segments are slightly wider than the
           earlier 18% / 20% — visibly softer feathering, no impact

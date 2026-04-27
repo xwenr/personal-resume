@@ -1,6 +1,6 @@
-import { useEffect, useLayoutEffect, useRef, useState, type SVGProps } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { ExternalLink, Star } from 'lucide-react'
+import { useEffect, useRef, useState, type RefObject, type SVGProps } from 'react'
+import { motion } from 'framer-motion'
+import { ChevronLeft, ChevronRight, ExternalLink, Star } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
 import { SectionHeading } from '@/components/ui/section-heading'
@@ -11,21 +11,61 @@ import type { Locale } from '@/i18n/translations'
 import { cn } from '@/lib/utils'
 import { DURATION, EASE } from '@/lib/motion'
 
-// Tailwind's `md` breakpoint — below this we fall back to native horizontal
-// snap scrolling, which feels more natural on touch devices than hijacked
-// sticky scrolling.
+// `md+` uses DesktopWorks (wider padding / gap-8); below uses MobileWorks.
 const DESKTOP_QUERY = '(min-width: 768px)'
 
+/** Matches Tailwind `gap-6` on the narrow breakpoint row */
+const MOBILE_CARD_GAP_PX = 24
+/** Matches Tailwind `gap-8` on the desktop row */
+const DESKTOP_CARD_GAP_PX = 32
+
+function WorksCarouselArrows({
+  scrollRef,
+  cardGapPx,
+  prevLabel,
+  nextLabel,
+}: {
+  scrollRef: RefObject<HTMLDivElement | null>
+  cardGapPx: number
+  prevLabel: string
+  nextLabel: string
+}) {
+  const step = (dir: -1 | 1) => {
+    const el = scrollRef.current
+    if (!el) return
+    const card = el.querySelector('article')
+    const w = card?.getBoundingClientRect().width ?? el.clientWidth * 0.85
+    el.scrollBy({ left: dir * (w + cardGapPx), behavior: 'smooth' })
+  }
+
+  const btnClass =
+    'liquid-glass glass-hover inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-foreground transition-colors'
+
+  return (
+    <div className="mt-3 flex items-center justify-end gap-2">
+      <button
+        type="button"
+        aria-label={prevLabel}
+        className={btnClass}
+        onClick={() => step(-1)}
+      >
+        <ChevronLeft className="h-5 w-5" strokeWidth={1.75} />
+      </button>
+      <button
+        type="button"
+        aria-label={nextLabel}
+        className={btnClass}
+        onClick={() => step(1)}
+      >
+        <ChevronRight className="h-5 w-5" strokeWidth={1.75} />
+      </button>
+    </div>
+  )
+}
+
 /**
- * Works gallery.
- *
- * Desktop: classic "sticky + translateX" horizontal scroll driven by
- * Framer Motion's `useScroll` / `useTransform`. The outer container is tall;
- * the inner sticky wrapper freezes the viewport while the user scrolls
- * vertically, and the track slides horizontally via a hardware-accelerated
- * `x` transform (no per-frame React re-renders).
- *
- * Mobile: plain native `overflow-x-auto` with CSS scroll snapping.
+ * Works gallery — desktop & mobile both use native `overflow-x-auto` +
+ * snap (stable flow, no JS-driven section height).
  */
 export function VibeGallery() {
   const [isDesktop, setIsDesktop] = useState(true)
@@ -46,164 +86,14 @@ function DesktopWorks() {
   const { t, lang } = useTranslation()
   const works = t.works
   const items = resolveWorks(lang)
-
-  // `targetRef` → outer tall <section>, consumed by `useScroll` as the
-  // progress target. `trackRef` → the horizontal <motion.div> we measure
-  // once (on mount / resize / font-load) to derive an exact translate end.
-  const targetRef = useRef<HTMLElement>(null)
-  const trackRef = useRef<HTMLDivElement>(null)
-
-  // Geometry derived from the real track width. Computed only on
-  // mount/resize/font-load — NEVER during scroll — so the scroll path
-  // stays on the GPU transform with zero per-frame React re-renders.
-  //
-  //   • `translateEnd`: final CSS translate percentage, e.g. "-47.50%".
-  //     Keeps the canonical `["0%", "-X%"]` shape while adapting to any
-  //     viewport width. Hard-coding a single "-65%" or "-75%" looks fine
-  //     on one monitor and breaks on another (we verified this on 1280 vs
-  //     1920 viewports). `-70%` is just a fallback for the single pre-
-  //     measurement frame; `useLayoutEffect` overrides it synchronously
-  //     before the browser paints.
-  //   • `sectionHeight`: outer <section> height = 1 viewport (the sticky
-  //     dwell) + exactly the horizontal travel in pixels. Progress reaches
-  //     1 precisely as the last card's RIGHT edge meets the viewport's
-  //     RIGHT edge — and at that same instant the sticky releases and the
-  //     page continues to Contact. No scroll-trap dead zone.
-  const [translateEnd, setTranslateEnd] = useState<string>('-70%')
-  const [sectionHeight, setSectionHeight] = useState<string>('250vh')
-
-  useLayoutEffect(() => {
-    const track = trackRef.current
-    if (!track) return
-
-    const measure = () => {
-      const styles = window.getComputedStyle(track)
-      // Right padding on the motion track (`px-8 md:px-20`) is *not* card
-      // content — if we translate past it, the user sees a dead zone at
-      // the end of the scroll where the cards look done but the page is
-      // still pinned. Subtract it so translate stops exactly on the last
-      // card's right edge.
-      const rightPadding = Number.parseFloat(styles.paddingRight) || 0
-      const trackWidth = track.scrollWidth
-      const viewportWidth = window.innerWidth
-      const viewportHeight = window.innerHeight
-
-      const contentEnd = trackWidth - rightPadding
-      const distancePx = Math.max(0, contentEnd - viewportWidth)
-
-      if (trackWidth > 0) {
-        const pct = (distancePx / trackWidth) * 100
-        setTranslateEnd(`-${pct.toFixed(2)}%`)
-      }
-      setSectionHeight(`${viewportHeight + distancePx}px`)
-    }
-
-    measure()
-
-    const resizeObserver = new ResizeObserver(measure)
-    resizeObserver.observe(track)
-    window.addEventListener('resize', measure)
-
-    if (typeof document !== 'undefined' && 'fonts' in document) {
-      document.fonts.ready.then(measure).catch(() => {})
-    }
-
-    return () => {
-      resizeObserver.disconnect()
-      window.removeEventListener('resize', measure)
-    }
-  }, [items.length, lang])
-
-  const { scrollYProgress } = useScroll({
-    target: targetRef,
-    // Exact 0→1 mapping across the outer <section>: progress is 0 when
-    // the section top hits the viewport top; 1 when the section bottom
-    // hits the viewport bottom. Since sticky releases at that exact
-    // moment, the page naturally flows into the next sibling (Contact).
-    offset: ['start start', 'end end'],
-  })
-  const x = useTransform(scrollYProgress, [0, 1], ['0%', translateEnd])
+  const scrollRef = useRef<HTMLDivElement>(null)
 
   return (
-    // 1. Scroll Track — tall outer <section>. Parent <main> uses
-    //    `overflow-x-clip` (NOT `hidden`) so the sticky anchor is the
-    //    real viewport, not <main>.
     <section
       id="works"
-      ref={targetRef}
-      className="relative w-full bg-transparent"
-      style={{ height: sectionHeight }}
+      className="relative z-30 w-full bg-background pb-12 pt-24 md:pb-16 md:pt-32"
     >
-      {/* 2. Sticky Viewport — `flex-col` so the header stacks cleanly
-             ABOVE the card track (previous `items-center` + absolute
-             header caused them to overlap on tall cards). */}
-      <div className="sticky top-0 flex h-screen w-full flex-col justify-center overflow-hidden py-10 lg:py-16">
-        {/* 3. Header — static, reserves its own vertical space. */}
-        <div className="mx-auto mb-10 w-full max-w-7xl shrink-0 px-8 md:px-20">
-          <SectionHeading
-            eyebrow={works.eyebrow}
-            title={
-              <>
-                {works.titlePrefix}{' '}
-                <em className="font-display italic text-muted-foreground">
-                  {works.titleEmphasis}
-                </em>
-              </>
-            }
-            description={works.description}
-            className="max-w-3xl"
-          />
-        </div>
-
-        {/* 4. Motion Track Wrapper — takes the remaining vertical space
-               (flex-1) and vertically centres the horizontal motion row. */}
-        <div className="flex flex-1 items-center">
-          <motion.div
-            ref={trackRef}
-            style={{ x }}
-            // `shrink-0` is essential: without it, flex will compress
-            // `w-max` down to the wrapper width (= viewport), which
-            // desynchronises `scrollWidth` (true content width) from
-            // `offsetWidth` (what `translateX(%)` is measured against),
-            // breaking our percentage calculation.
-            className="flex w-max shrink-0 items-stretch gap-8 px-8 will-change-transform md:px-20"
-          >
-            {items.map((item, idx) => (
-              <Polaroid
-                key={item.slug}
-                item={item}
-                index={idx}
-                lang={lang}
-                viewRepoLabel={works.viewRepo}
-                viewLiveLabel={works.viewLive}
-                updatedPrefix={works.updatedPrefix}
-              />
-            ))}
-          </motion.div>
-        </div>
-
-        {/* 5. Footer — scroll hint + count, static at the bottom of the
-               sticky frame (shrink-0 so it isn't squeezed). */}
-        <div className="mx-auto mt-8 flex w-full max-w-7xl shrink-0 items-center justify-between px-8 text-xs uppercase tracking-[0.3em] text-muted-foreground md:px-20">
-          <span>{works.scrollHint}</span>
-          <span>
-            {String(items.length).padStart(2, '0')}{' '}
-            {works.worksCountSuffix}
-          </span>
-        </div>
-      </div>
-    </section>
-  )
-}
-
-function MobileWorks() {
-  const { t, lang } = useTranslation()
-  const works = t.works
-  const items = resolveWorks(lang)
-
-  return (
-    <section id="works" className="relative w-full py-20">
-      <div className="mx-auto mb-8 w-full max-w-7xl px-6">
+      <div className="mx-auto mb-8 w-full max-w-7xl px-8 md:px-20">
         <SectionHeading
           eyebrow={works.eyebrow}
           title={
@@ -217,13 +107,20 @@ function MobileWorks() {
           description={works.description}
           className="max-w-3xl"
         />
+        <WorksCarouselArrows
+          scrollRef={scrollRef}
+          cardGapPx={DESKTOP_CARD_GAP_PX}
+          prevLabel={works.scrollPrev}
+          nextLabel={works.scrollNext}
+        />
       </div>
 
       <div
+        ref={scrollRef}
         className={cn(
-          'flex snap-x snap-mandatory gap-6 overflow-x-auto overflow-y-hidden px-6 pb-6',
+          'flex flex-nowrap snap-x snap-mandatory gap-8 overflow-x-auto overflow-y-hidden px-8 pb-12 md:px-20',
           '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
-          'scroll-px-6',
+          'scroll-px-8 md:scroll-px-20',
         )}
       >
         {items.map((item, idx) => (
@@ -239,7 +136,68 @@ function MobileWorks() {
         ))}
       </div>
 
-      <div className="mx-auto mt-6 flex w-full max-w-7xl items-center justify-between px-6 text-xs uppercase tracking-[0.3em] text-muted-foreground">
+      <div className="mx-auto mt-6 flex w-full max-w-7xl items-center justify-between px-8 text-xs uppercase tracking-[0.3em] text-muted-foreground md:px-20">
+        <span>{works.scrollHint}</span>
+        <span>
+          {String(items.length).padStart(2, '0')} {works.worksCountSuffix}
+        </span>
+      </div>
+    </section>
+  )
+}
+
+function MobileWorks() {
+  const { t, lang } = useTranslation()
+  const works = t.works
+  const items = resolveWorks(lang)
+  const scrollRef = useRef<HTMLDivElement>(null)
+
+  return (
+    <section id="works" className="relative w-full py-20">
+      <div className="mx-auto mb-8 w-full max-w-7xl px-8">
+        <SectionHeading
+          eyebrow={works.eyebrow}
+          title={
+            <>
+              {works.titlePrefix}{' '}
+              <em className="font-display italic text-muted-foreground">
+                {works.titleEmphasis}
+              </em>
+            </>
+          }
+          description={works.description}
+          className="max-w-3xl"
+        />
+        <WorksCarouselArrows
+          scrollRef={scrollRef}
+          cardGapPx={MOBILE_CARD_GAP_PX}
+          prevLabel={works.scrollPrev}
+          nextLabel={works.scrollNext}
+        />
+      </div>
+
+      <div
+        ref={scrollRef}
+        className={cn(
+          'flex flex-nowrap snap-x snap-mandatory gap-6 overflow-x-auto overflow-y-hidden px-8 pb-12',
+          '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
+          'scroll-px-8',
+        )}
+      >
+        {items.map((item, idx) => (
+          <Polaroid
+            key={item.slug}
+            item={item}
+            index={idx}
+            lang={lang}
+            viewRepoLabel={works.viewRepo}
+            viewLiveLabel={works.viewLive}
+            updatedPrefix={works.updatedPrefix}
+          />
+        ))}
+      </div>
+
+      <div className="mx-auto mt-6 flex w-full max-w-7xl items-center justify-between px-8 text-xs uppercase tracking-[0.3em] text-muted-foreground">
         <span>{works.scrollHint}</span>
         <span>
           {String(items.length).padStart(2, '0')}{' '}
@@ -277,7 +235,7 @@ function Polaroid({
       viewport={{ once: true, margin: '-80px' }}
       transition={{ duration: DURATION.default, ease: EASE }}
       whileHover={{ y: -6, rotate: 0, scale: 1.02 }}
-      className="liquid-glass group relative flex w-[320px] shrink-0 snap-start flex-col overflow-hidden p-5 sm:w-[380px] md:w-[440px]"
+      className="liquid-glass group relative flex w-[85vw] shrink-0 snap-start flex-col overflow-hidden p-5 sm:w-[400px] md:w-[480px] lg:w-[500px]"
     >
       {/* Hero area is locked to a 3:4 portrait so poster screenshots and
           the abstract PolaroidMock share the same aspect — cards line up
@@ -342,13 +300,13 @@ function Polaroid({
       </div>
 
       {hasFootRow ? (
-        <div className="mt-4 flex items-center justify-between border-t border-foreground/10 pt-3 text-[11px] text-muted-foreground">
+        <div className="mt-4 flex items-center justify-between border-t border-foreground/10 pt-3 text-sm text-muted-foreground">
           <div className="flex min-w-0 items-center gap-3">
             {github?.language ? (
               <span className="flex items-center gap-1.5">
                 <span
                   aria-hidden
-                  className="h-2 w-2 rounded-full"
+                  className="h-2.5 w-2.5 shrink-0 rounded-full"
                   style={{ backgroundColor: languageColour(github.language) }}
                 />
                 <span className="truncate">{github.language}</span>
@@ -356,7 +314,7 @@ function Polaroid({
             ) : null}
             {github && github.stars > 0 ? (
               <span className="flex items-center gap-1">
-                <Star className="h-3 w-3" strokeWidth={1.6} />
+                <Star className="h-4 w-4" strokeWidth={1.6} />
                 <span>{formatStars(github.stars)}</span>
               </span>
             ) : null}
@@ -373,11 +331,11 @@ function Polaroid({
                 href={liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group/cta inline-flex items-center gap-1 whitespace-nowrap font-medium text-foreground/85 transition-colors hover:text-foreground"
+                className="group/cta inline-flex items-center gap-1.5 whitespace-nowrap text-sm font-medium text-foreground/85 transition-colors hover:text-foreground"
               >
                 {viewLiveLabel}
                 <ExternalLink
-                  className="h-3 w-3 transition-transform group-hover/cta:-translate-y-0.5 group-hover/cta:translate-x-0.5"
+                  className="h-4 w-4 transition-transform group-hover/cta:-translate-y-0.5 group-hover/cta:translate-x-0.5"
                   strokeWidth={1.6}
                 />
               </a>
@@ -387,11 +345,11 @@ function Polaroid({
                 href={ctaUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group/cta inline-flex items-center gap-1 whitespace-nowrap font-medium text-foreground/85 transition-colors hover:text-foreground"
+                className="group/cta inline-flex items-center gap-1.5 whitespace-nowrap text-sm font-medium text-foreground/85 transition-colors hover:text-foreground"
               >
                 {viewRepoLabel}
                 <ExternalLink
-                  className="h-3 w-3 transition-transform group-hover/cta:-translate-y-0.5 group-hover/cta:translate-x-0.5"
+                  className="h-4 w-4 transition-transform group-hover/cta:-translate-y-0.5 group-hover/cta:translate-x-0.5"
                   strokeWidth={1.6}
                 />
               </a>

@@ -199,6 +199,8 @@ export function CtaFooter() {
             {i > 0 ? ' ' : null}
             {i === titleWords.length - 1 ? (
               <em className="not-italic text-muted-foreground">{word}</em>
+            ) : lang === 'zh' ? (
+              <span className="text-5xl md:text-7xl">{word}</span>
             ) : (
               word
             )}
