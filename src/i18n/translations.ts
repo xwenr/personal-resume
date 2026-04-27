@@ -249,6 +249,12 @@ export const zh = {
       },
     ],
   },
+  about: {
+    eyebrow: '02½ — 关于我',
+    subtitle:
+      '深耕数据与 AIGC 的交叉地带，把模型能力翻译成创作者触手可及的工具。',
+    placeholderLabel: 'vibe anchor',
+  },
   works: {
     eyebrow: '03 — 项目作品',
     titlePrefix: '动手做出来的',
@@ -533,6 +539,12 @@ export const en: Translations = {
         ],
       },
     ],
+  },
+  about: {
+    eyebrow: '02½ — About',
+    subtitle:
+      'Working the seam between data and AIGC — translating model capability into tools creators can actually hold.',
+    placeholderLabel: 'vibe anchor',
   },
   works: {
     eyebrow: '03 — Selected Works',
