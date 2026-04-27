@@ -19,3 +19,9 @@
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Hero 背景视频体积大 —— 长缓存减轻重复访问等待（换片源时记得改 URL ?v=）
+[[headers]]
+  for = "/hero-bg.mp4"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

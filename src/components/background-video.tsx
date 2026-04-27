@@ -9,7 +9,8 @@ import { EASE, irisReveal } from '@/lib/motion'
  * The query-string is a cache-buster so that browsers fetch the fresh
  * file whenever the underlying asset is overwritten.
  */
-const VIDEO_SRC = '/hero-bg.mp4?v=3'
+/** Bump when replacing `public/hero-bg.mp4` so CDN/browser pick up new bytes. */
+const VIDEO_SRC = '/hero-bg.mp4?v=5'
 
 interface BackgroundVideoProps {
   /**
@@ -60,17 +61,18 @@ export function BackgroundVideo({ scrollYProgress }: BackgroundVideoProps) {
       variants={irisReveal}
       className="absolute inset-0 z-0 overflow-hidden"
     >
+      {/* preload=metadata: large hero MP4 — avoids eager full-file download vs first paint */}
       <motion.video
         initial={{ scale: 1.1 }}
         animate={{ scale: 1.0 }}
         transition={{ duration: 1.8, ease: EASE }}
         style={{ y }}
-        className="absolute inset-0 h-full w-full object-cover"
+        className="absolute inset-0 h-full w-full bg-background object-cover"
         autoPlay
         loop
         muted
         playsInline
-        preload="auto"
+        preload="metadata"
         aria-hidden="true"
       >
         <source src={VIDEO_SRC} type="video/mp4" />
