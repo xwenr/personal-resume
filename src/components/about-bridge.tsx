@@ -1,8 +1,6 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 
-import { MaskedText } from '@/components/ui/masked-text'
-import { MediaPlaceholder } from '@/components/ui/media-placeholder'
 import { useTranslation } from '@/i18n/language-context'
 import {
   DURATION,
@@ -59,16 +57,11 @@ const ABOUT_PARALLAX: [string, string] = ['0%', '25%']
  *
  * Composition:
  *   - 2-column grid (12-col track): 5 image / 7 copy.
- *   - LEFT: a 4:3 `MediaPlaceholder` in a `liquid-glass` frame — will
- *     later hold an extremely restrained still (a corner of a room,
- *     a fragment of an instrument, or a portrait) that functions as
- *     the author's "vibe anchor".
- *   - RIGHT: a small uppercase eyebrow (`02½ — 关于我`) followed by a
- *     single display-size statement rendered through `<MaskedText>`
- *     so the copy rises word-by-word to match the other site
- *     headings. The statement is shorter than the hero's h1 and
- *     shorter than any SectionHeading description — the goal is
- *     ONE idea, not three.
+ *   - LEFT: a 1:1 photograph in a `liquid-glass` frame (`object-cover
+ *     object-left` — horizontal crop favours the left edge).
+ *   - RIGHT: a small uppercase eyebrow (`02½ — 关于我`), then body copy
+ *     (smaller type, relaxed leading), then hobby chips in rounded
+ *     bubbles aligned with the skills-card tag styling.
  *
  * Tempo:
  *   `items-center` on the grid means the copy is vertically aligned
@@ -81,13 +74,9 @@ const ABOUT_PARALLAX: [string, string] = ['0%', '25%']
  *   - No SectionHeading. This block IS the heading; layering another
  *     eyebrow/title/description rig on top would reinstate the
  *     "résumé section" voice we're trying to escape.
- *   - No CTA, no navigation chip, no list. A bridge with affordances
- *     becomes a destination; we want the reader to land, read one
- *     line, and scroll on.
- *   - No `whileHover` on the image. The placeholder invites a click
- *     by framing; hover physics would prime the user to expect a
- *     lightbox, which we aren't building. When a real asset lands
- *     in here, revisit whether hover-lift makes sense.
+ *   - No CTA, no navigation chip. A bridge with affordances becomes a
+ *     destination; we want the reader to land, read, and scroll on.
+ *   - No `whileHover` on the image — avoids implying a lightbox.
  *
  * Reveal timing — everything keyed off `revealViewport` so the bridge
  * fires only as the section crosses the fold, matching the rest of
@@ -273,12 +262,17 @@ export function AboutBridge() {
           initial="hidden"
           whileInView="visible"
           viewport={revealViewport}
-          className="liquid-glass relative overflow-hidden md:col-span-5"
+          className="liquid-glass relative mx-auto w-full max-w-[10.5rem] overflow-hidden md:col-span-5 md:mx-auto md:max-w-[12rem]"
         >
-          <MediaPlaceholder
-            aspectRatio="4/3"
-            label={about.placeholderLabel}
-          />
+          <div className="relative aspect-square w-full overflow-hidden">
+            <img
+              src={about.imageSrc}
+              alt={about.imageAlt}
+              className="h-full w-full object-cover object-left"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
         </motion.figure>
 
         <div className="md:col-span-7">
@@ -292,33 +286,35 @@ export function AboutBridge() {
             {about.eyebrow}
           </motion.span>
 
-          {/*
-            Subtitle sizing is DELIBERATELY one full step below a
-            section heading — `text-lg md:text-xl lg:text-2xl`
-            (18 / 20 / 24 px). The first iteration landed at
-            3xl/4xl/5xl (up to 48px) and read as another H2, which
-            collapsed this bridge back into looking like a section
-            header and defeated the whole "breath" purpose.
-
-            At 24 px the copy reads as an editorial subtitle — still
-            text-foreground high-contrast so it lands as a
-            statement, not body copy — but no longer competes with
-            the real section headings that bracket it.
-
-            `leading-snug` (1.375) replaces the earlier
-            `leading-[1.15]`: a 1.15 line-height is tuned for
-            display-size headlines where tight baselines amplify the
-            slab; at subtitle size it just squeezes the ascenders.
-            1.375 restores editorial breathing room without going
-            all the way to paragraph (1.5) territory.
-          */}
-          <MaskedText
-            as="h2"
-            delay={0.1}
-            className="mt-8 block text-pretty font-display text-lg leading-snug tracking-tight text-foreground md:text-xl lg:text-2xl"
+          <motion.p
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={revealViewport}
+            transition={{ duration: DURATION.default, ease: EASE, delay: 0.08 }}
+            className="mt-8 max-w-2xl text-pretty text-sm leading-relaxed text-foreground/90 md:text-[0.9375rem]"
           >
             {about.subtitle}
-          </MaskedText>
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={revealViewport}
+            transition={{ duration: DURATION.default, ease: EASE, delay: 0.14 }}
+            className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-2"
+          >
+            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+              {about.hobbiesLabel}
+            </span>
+            {about.hobbies.map((h) => (
+              <span
+                key={h}
+                className="inline-flex items-center rounded-full border border-foreground/12 bg-foreground/[0.04] px-3 py-1.5 text-xs font-medium text-foreground/85"
+              >
+                {h}
+              </span>
+            ))}
+          </motion.div>
         </div>
       </div>
     </section>

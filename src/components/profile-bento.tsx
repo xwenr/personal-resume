@@ -89,12 +89,12 @@ export function ProfileBento() {
                 {profile.education.eyebrow}
               </span>
             </div>
-            <div className="mt-6 flex flex-1 flex-col">
+            <div className="mt-6 flex flex-col">
               {profile.education.items.map((item, i) => (
                 <div
                   key={`${item.school}-${item.period}`}
                   className={cn(
-                    'flex min-w-0 flex-1 flex-col',
+                    'flex min-w-0 flex-col',
                     i > 0 && 'mt-6 border-t border-foreground/10 pt-6',
                   )}
                 >
@@ -179,43 +179,49 @@ export function ProfileBento() {
             </div>
           </BentoCard>
 
-          {/* Card 2 — Core Skills, categorised list */}
+          {/* Card 2 — Core Skills: 1:1 cover + eyebrow + inline category + tags */}
           <BentoCard className="md:row-span-2 lg:col-span-2 lg:row-span-2">
-            <div className="flex items-center gap-3 text-muted-foreground">
+            <div className="mx-auto w-[70%] max-w-[17rem] aspect-square rounded-xl overflow-hidden mb-2.5">
+              <img
+                src={profile.skills.coverSrc}
+                alt={profile.skills.coverAlt}
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div className="flex items-center gap-3 text-muted-foreground mt-0.5">
               <Sparkles className="h-4 w-4" />
               <span className="text-xs uppercase tracking-[0.25em]">
                 {profile.skills.eyebrow}
               </span>
             </div>
-            <h3 className="mt-5 font-display text-2xl leading-tight tracking-tight text-foreground md:text-3xl">
-              {profile.skills.title}
-            </h3>
-            <div className="mt-6 flex flex-1 flex-col divide-y divide-foreground/10">
+            <div className="mt-3 flex flex-col">
               {profile.skills.categories.map((cat, i) => (
                 <div
                   key={cat.name}
                   className={cn(
-                    'flex flex-col',
-                    i === 0 ? 'pb-4' : i === profile.skills.categories.length - 1 ? 'pt-4' : 'py-4',
+                    'flex min-w-0 items-start gap-x-2',
+                    i === 0 ? 'mt-0' : 'mt-3',
                   )}
                 >
-                  <h4 className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+                  <span className="shrink-0 pt-1.5 text-left text-[11px] font-semibold uppercase tracking-[0.25em] text-muted-foreground">
                     {cat.name}
-                  </h4>
-                  <ul className="mt-2 space-y-1.5">
-                    {cat.items.map((item, j) => (
-                      <li
-                        key={j}
-                        className="text-sm leading-relaxed text-foreground/90"
+                  </span>
+                  <div className="flex min-w-0 flex-1 flex-wrap items-start justify-start gap-2">
+                    {cat.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-flex items-center rounded-full border border-foreground/12 bg-foreground/[0.04] px-3 py-1.5 text-xs font-medium text-foreground/85 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-foreground/20 hover:bg-foreground/[0.08] hover:text-foreground hover:shadow-[0_6px_18px_rgba(58,46,42,0.08)] cursor-default"
                       >
-                        {item}
-                      </li>
+                        {tag}
+                      </span>
                     ))}
-                  </ul>
+                  </div>
                 </div>
               ))}
             </div>
-            <p className="mt-6 text-xs uppercase tracking-[0.25em] text-muted-foreground">
+            <p className="mt-4 text-xs uppercase tracking-[0.25em] text-muted-foreground">
               {profile.skills.footnote}
             </p>
           </BentoCard>

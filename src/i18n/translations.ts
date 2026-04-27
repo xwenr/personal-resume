@@ -88,34 +88,26 @@ export const zh = {
     },
     skills: {
       eyebrow: '核心技能',
-      title: '一套面向现代产品工作的 全栈工具箱。',
+      title: '一套面向现代产品工作的全栈工具箱。',
       footnote: '· 每日应用于产品落地与研究分析',
+      coverSrc: '/photo/1.jpg',
+      coverAlt: '技能板块配图',
       categories: [
         {
-          name: '语言能力',
-          items: [
-            '英语六级（584），具备熟练的英文文献与技术文档阅读能力，能进行日常工作沟通',
-          ],
+          name: '产品设计',
+          tags: ['Axure', 'Figma', 'Vibe Coding', '需求分析', '原型输出'],
         },
         {
-          name: '产品设计与工具',
-          items: [
-            '熟练使用 Axure / 墨刀 / Figma / Pixso 进行界面设计与协作，熟练应用 AI 进行原型设计，具备原型输出、Vibe Coding 经验',
-            '具备较强的沟通协调能力和执行力，能高效对接跨部门工作，推动功能从设计到上线的落地执行',
-          ],
+          name: '数据科学',
+          tags: ['Python', 'Pandas', 'SQL', 'Scikit-learn', '数据库设计'],
         },
         {
-          name: '数据科学与编程',
-          items: [
-            'Python：精通数据科学栈（Pandas / NumPy / Scikit-learn），掌握机器学习建模，熟悉 Matplotlib、Seaborn 等可视化库',
-            'SQL：熟练编写复杂查询、视图与存储过程，具备数据库设计、优化与高性能查询能力',
-          ],
+          name: '数据分析',
+          tags: ['Excel 透视表', 'Tableau', 'Power BI', '商业洞察'],
         },
         {
-          name: '数据分析与可视化',
-          items: [
-            '精通 Excel（数据透视表、VLOOKUP 等）；掌握 Tableau 与 Power BI 进行数据看板搭建与可视化呈现',
-          ],
+          name: '语言',
+          tags: ['英语六级 (584)', '英文文献阅读'],
         },
       ],
     },
@@ -252,8 +244,11 @@ export const zh = {
   about: {
     eyebrow: '02½ — 关于我',
     subtitle:
-      '深耕数据与 AIGC 的交叉地带，把模型能力翻译成创作者触手可及的工具。',
-    placeholderLabel: 'vibe anchor',
+      '我是一名具备金融数学与应用统计复合背景的学生。通过五段涵盖 AIGC、SaaS 及风控领域的跨行业实习，我沉淀了扎实的业务抽象与需求拆解能力，也锻炼了跨团队沟通与协作能力。我具备极强的逻辑建模力与闭环思维，对数据敏感。我自学能力强，乐于探索新鲜事物，喜欢探索利用Vibe Coding落地产品巧思。身边人对我的评价是：靠谱，值得信赖，适应力强，能力强。',
+    hobbiesLabel: '爱好',
+    hobbies: ['打羽毛球', '读书', '看电影'],
+    imageSrc: '/photo/2.jpg',
+    imageAlt: '关于我 — 配图',
   },
   works: {
     eyebrow: '03 — 项目作品',
@@ -379,32 +374,35 @@ export const en: Translations = {
       eyebrow: 'Core Skills',
       title: 'A polyglot toolkit for modern product work.',
       footnote: '· Applied daily in shipping product & research',
+      coverSrc: '/photo/1.jpg',
+      coverAlt: 'Skills section cover image',
       categories: [
         {
+          name: 'Product design',
+          tags: [
+            'Axure',
+            'Figma',
+            'Vibe Coding',
+            'Requirements analysis',
+            'Prototyping',
+          ],
+        },
+        {
+          name: 'Data science',
+          tags: ['Python', 'Pandas', 'SQL', 'Scikit-learn', 'Database design'],
+        },
+        {
+          name: 'Data analytics',
+          tags: [
+            'Excel pivot tables',
+            'Tableau',
+            'Power BI',
+            'Business insight',
+          ],
+        },
+        {
           name: 'Languages',
-          items: [
-            'CET-6 (584) — fluent in reading English literature & technical documentation; comfortable in day-to-day English communication.',
-          ],
-        },
-        {
-          name: 'Product Design & Tools',
-          items: [
-            'Proficient in Axure / MockingBot / Figma / Pixso for UI design and cross-team collaboration; experienced in AI-assisted prototyping, prototype delivery and Vibe Coding.',
-            'Strong communication and execution skills — able to coordinate across functions and drive features from design to launch.',
-          ],
-        },
-        {
-          name: 'Data Science & Programming',
-          items: [
-            'Python — fluent in the data-science stack (Pandas / NumPy / Scikit-learn); experienced in ML modelling; familiar with Matplotlib & Seaborn for visualisation.',
-            'SQL — skilled in complex queries, views and stored procedures; database design, optimisation and high-performance querying.',
-          ],
-        },
-        {
-          name: 'Data Analytics & Visualisation',
-          items: [
-            'Proficient in Excel (pivot tables, VLOOKUP, etc.); Tableau and Power BI for dashboarding and data storytelling.',
-          ],
+          tags: ['CET-6 (584)', 'English papers & docs'],
         },
       ],
     },
@@ -543,8 +541,11 @@ export const en: Translations = {
   about: {
     eyebrow: '02½ — About',
     subtitle:
-      'Working the seam between data and AIGC — translating model capability into tools creators can actually hold.',
-    placeholderLabel: 'vibe anchor',
+      "I'm a student with a dual grounding in financial mathematics and applied statistics. Across five internships spanning AIGC, SaaS and risk control, I've built solid skills in business abstraction and requirements breakdown, and in communicating and collaborating across teams. I'm strong in logical modelling and end-to-end thinking, and I'm highly attuned to data. I learn fast, enjoy exploring new ideas, and like finding product touches through Vibe Coding. People around me say I'm dependable, trustworthy, adaptable and capable.",
+    hobbiesLabel: 'Interests',
+    hobbies: ['Badminton', 'Reading', 'Films'],
+    imageSrc: '/photo/2.jpg',
+    imageAlt: 'About — portrait',
   },
   works: {
     eyebrow: '03 — Selected Works',
