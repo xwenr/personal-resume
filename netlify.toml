@@ -1,8 +1,6 @@
-# Netlify 构建配置
-# 仓库：xwenr/personal-resume，子目录部署 velorah/
+# Netlify 构建配置（仓库根目录即本项目，不要使用 base = "velorah"）
 
 [build]
-  base = "velorah"
   command = "npm run build"
   publish = "dist"
 
