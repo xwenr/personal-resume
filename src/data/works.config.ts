@@ -79,7 +79,7 @@ export const WORKS_CONFIG: WorkConfig[] = [
     meta: { zh: '', en: '' },
     accent: 'from-amber-300/40 to-orange-200/20',
     cover: '/works/resumeflow.png',
-    liveUrl: 'https://resume-joy.netlify.app/',
+    liveUrl: 'https://resumeflow.1715786877.workers.dev/',
   },
   {
     slug: 'travel-plan',
