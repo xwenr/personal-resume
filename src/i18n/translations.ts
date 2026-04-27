@@ -21,14 +21,14 @@ export const zh = {
     tooltip: '切换语言',
   },
     hero: {
-    available: '正在寻求 2026 秋招机会',
-    titleWords: ['产品经理', '&', 'AIGC 探索者'],
+    available: '正在寻求 2027 秋招机会',
+    titleWords: ['产品经理', '&', 'AI 探索者'],
     description:
-      '游走在应用统计与 AIGC 产品之间 —— 用数据的严谨思考产品决策，用产品的温度设计用户体验。',
+      '游走在应用统计与 AI 产品之间 —— 用数据的严谨思考产品决策，用产品的温度设计用户体验。',
     viewPortfolio: '查看作品',
     sayHello: '打个招呼',
-    studioName: '产品 · 数据 · AIGC',
-    est: '2026',
+    studioName: '产品 · 数据 · AI',
+    est: '2027',
     scroll: '向下滚动 ↓',
   },
   profile: {
@@ -36,7 +36,7 @@ export const zh = {
     titlePrefix: '以数据为底色的',
     titleEmphasis: '产品思考者。',
     description:
-      '在应用统计、AIGC 产品与温润的用户体验之间寻找连接 —— 对细节保持好奇，对决策保持严谨。',
+      '在应用统计、AI 产品与温润的用户体验之间寻找连接 —— 对细节保持好奇，对决策保持严谨。',
     education: {
       eyebrow: '教育背景',
       coursesLabel: '核心课程',
@@ -164,7 +164,7 @@ export const zh = {
     titleEmphasis: '一条清晰轨迹',
     titleSuffix: '。',
     description:
-      '从数据风控到产品落地，再到 AIGC 模型运营 —— 每一段都在回答同一个问题：数据如何变成真正有用的产品体验。',
+      '以数据校准判断，用逻辑拆解需求，在实习中磨练理解、沟通与落地能力，协同推动交付与复盘闭环。',
     items: [
       {
         id: 'haima-cloud',
@@ -261,7 +261,7 @@ export const zh = {
     scrollNext: '下一项作品',
     worksCountSuffix: '个项目',
     viewRepo: '查看仓库',
-    viewLive: '在线预览',
+    viewLive: '在线网址',
     viewDetail: '查看详情',
     updatedPrefix: '更新于',
     starsLabel: '星标',
@@ -269,9 +269,9 @@ export const zh = {
   },
   contact: {
     eyebrow: '04 — 联系方式',
-    titleWords: ['期待与你产生新的', '连接。'],
+    titleWords: ['期待与您产生新的', '连接。'],
     description:
-      '正在寻求 2026 秋招产品经理 / 数据产品相关机会；也欢迎关于 AIGC、研究与产品体验的任何交流。',
+      '正在寻求 2027 秋招产品经理 / 数据产品相关机会；也欢迎关于 AI、研究与产品体验的任何交流。',
     downloadResume: '下载简历',
     sendEmail: '发送邮件',
     resumeFile: '/resume-zh.pdf',
@@ -307,14 +307,14 @@ export const en: Translations = {
     tooltip: 'Switch language',
   },
   hero: {
-    available: 'Available for 2026 New-Grad roles',
-    titleWords: ['Product', '&', 'AIGC Explorer'],
+    available: 'Available for 2027 New-Grad roles',
+    titleWords: ['Product', '&', 'AI Explorer'],
     description:
-      'Working at the intersection of applied statistics and AIGC products — where the rigour of data meets the warmth of thoughtful product design.',
+      'Working at the intersection of applied statistics and AI products — where the rigour of data meets the warmth of thoughtful product design.',
     viewPortfolio: 'View Portfolio',
     sayHello: 'Say hello',
-    studioName: 'Product · Data · AIGC',
-    est: '2026',
+    studioName: 'Product · Data · AI',
+    est: '2027',
     scroll: 'Scroll ↓',
   },
   profile: {
@@ -322,7 +322,7 @@ export const en: Translations = {
     titlePrefix: 'A data-minded',
     titleEmphasis: 'product thinker.',
     description:
-      'Building at the intersection of applied statistics, AIGC and thoughtful user experience — curious about the details, rigorous about the decisions.',
+      'Building at the intersection of applied statistics, AI and thoughtful user experience — curious about the details, rigorous about the decisions.',
     education: {
       eyebrow: 'Education',
       coursesLabel: 'Core courses',
@@ -463,7 +463,7 @@ export const en: Translations = {
     titleEmphasis: 'one clear trajectory',
     titleSuffix: '.',
     description:
-      'From risk-control analytics, to data-product delivery, to AIGC model operations — each step answers the same question: how does data turn into useful product experience.',
+      'Grounding judgment in data, unpacking requirements with logic, and sharpening comprehension, communication and execution through internships — collaborating to ship outcomes and close the loop with retros.',
     items: [
       {
         id: 'haima-cloud',
@@ -560,7 +560,7 @@ export const en: Translations = {
     scrollNext: 'Next project',
     worksCountSuffix: 'projects',
     viewRepo: 'View repo',
-    viewLive: 'Live demo',
+    viewLive: 'Live site',
     viewDetail: 'View details',
     updatedPrefix: 'Updated',
     starsLabel: 'Stars',
@@ -570,7 +570,7 @@ export const en: Translations = {
     eyebrow: '04 — Contact',
     titleWords: ["Let's", 'Build', 'Together.'],
     description:
-      'Open to 2026 new-grad roles in product management and data products, and to thoughtful conversations about AIGC, research and product craft.',
+      'Open to 2027 new-grad roles in product management and data products, and to thoughtful conversations about AI, research and product craft.',
     downloadResume: 'Download Resume',
     sendEmail: 'Send an Email',
     resumeFile: '/resume-en.pdf',
