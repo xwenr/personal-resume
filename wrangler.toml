@@ -1,0 +1,8 @@
+# 可选：本地用 Wrangler CLI 手动部署时使用
+#   npm run build && npx wrangler pages deploy dist --project-name=你的项目名
+#
+# Git 连接 Cloudflare Pages 时以控制台构建设置为准，可不依赖本文件。
+
+name = "velorah-portfolio"
+compatibility_date = "2026-04-27"
+pages_build_output_dir = "dist"
