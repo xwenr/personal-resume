@@ -145,7 +145,17 @@ export function CtaFooter() {
       <motion.div
         aria-hidden
         style={{ y: yBg }}
-        className="pointer-events-none absolute inset-x-0 -top-[6%] -z-10 overflow-hidden"
+        // `bottom-0` is load-bearing: without it, this absolute layer's
+        // height is dictated by the natural height of the inner PNG
+        // (a w-full image at desktop widths is ~1000px tall) and ends
+        // up extending hundreds of px BELOW the section's own bottom
+        // edge. The texture is invisible there (mask + mix-blend +
+        // -z-10), but its bounding box still feeds into
+        // `document.scrollHeight`, leaving a phantom scroll region
+        // after the copyright strip. Pinning bottom-0 keeps the layer
+        // strictly inside `<section>`'s box, so the document ends
+        // cleanly at the copyright strip + pb-12.
+        className="pointer-events-none absolute inset-x-0 -top-[6%] bottom-0 -z-10 overflow-hidden"
       >
         <img
           src="/textures/contact-shadow.png"
