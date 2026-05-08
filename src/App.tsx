@@ -2,7 +2,7 @@ import { MotionConfig, motion } from 'framer-motion'
 
 import { AboutBridge } from '@/components/about-bridge'
 import { CtaFooter } from '@/components/cta-footer'
-import { ExperienceSplit } from '@/components/experience-split'
+import { ExperienceSphere } from '@/components/experience-sphere'
 import { Hero } from '@/components/hero'
 import { ProfileBento } from '@/components/profile-bento'
 import { SiteNav } from '@/components/site-nav'
@@ -82,7 +82,7 @@ function App() {
             timeline. See `about-bridge.tsx` for layout rationale.
           */}
           <AboutBridge />
-          <ExperienceSplit />
+          <ExperienceSphere />
           <VibeGallery />
           <CtaFooter />
         </motion.main>
